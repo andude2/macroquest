@@ -405,6 +405,10 @@ bool InitDirectories(const std::string& iniToRead)
 		strcpy_s(gPathPlugins, mq::internal_paths::Plugins.c_str());
 		strcpy_s(gPathResources, mq::internal_paths::Resources.c_str());
 		strcpy_s(gPathEverQuest, mq::internal_paths::EverQuest.c_str());
+
+		std::filesystem::create_directories(mq::internal_paths::Config + "\\MacroQuest_Overlay", ec);
+		std::filesystem::create_directories(mq::internal_paths::Logs + "\\MacroQuest_Overlay", ec);
+
 		return true;
 	}
 
@@ -850,6 +854,7 @@ void MacroQuest::Initialize()
 	InitializeStringDB();
 
 	InitializeChatHook();
+	InitializeOverlayService();
 	InitializeAnonymizer();
 	InitializeInternalModules();
 	AddInternalModule(GetWindowsModule());
@@ -881,6 +886,7 @@ void MacroQuest::Shutdown()
 	ShutdownCachedBuffs();
 	ShutdownMQ2KeyBinds();
 	ShutdownChatHook();
+	ShutdownOverlayService();
 	ShutdownMQ2Pulse();
 	ShutdownLoginFrontend();
 	ShutdownMQ2AutoInventory();

@@ -21,6 +21,7 @@
 #include "routing/ClientPostOffice.h"
 
 #include <string>
+#include <string_view>
 
 namespace mq {
 
@@ -32,6 +33,7 @@ public:
 
 	void NotifyIsForegroundWindow(bool isForeground);
 	void RequestActivateWindow(HWND hWnd, bool sendMessage);
+	void SendDebugLog(std::string_view message);
 	void SendNotification(const std::string& message, const std::string& title);
 	void SetGameState(int GameState);
 
@@ -55,6 +57,7 @@ namespace pipeclient {
 
 void NotifyIsForegroundWindow(bool isForeground);
 void RequestActivateWindow(HWND hWnd, bool sendMessage = true);
+void SendDebugLog(std::string_view message);
 void SendNotification(const std::string& message, const std::string& title);
 
 } // namespace pipeclient

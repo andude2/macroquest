@@ -685,42 +685,111 @@ void SetFocusWindowPID(uint32_t pid, bool state)
 	}
 }
 
+HWND GetShellActivationWindow(HWND hWnd)
+{
+	HWND rootWindow = ::GetAncestor(hWnd, GA_ROOT);
+	if (rootWindow)
+		hWnd = rootWindow;
+
+	HWND rootOwnerWindow = ::GetAncestor(hWnd, GA_ROOTOWNER);
+	if (rootOwnerWindow)
+		hWnd = rootOwnerWindow;
+
+	HWND lastActivePopup = ::GetLastActivePopup(hWnd);
+	if (lastActivePopup && ::IsWindowVisible(lastActivePopup))
+		hWnd = lastActivePopup;
+
+	return hWnd;
+}
+
+void SendAltKeyUnlock()
+{
+	INPUT inputs[2] = {};
+	inputs[0].type = INPUT_KEYBOARD;
+	inputs[0].ki.wVk = VK_MENU;
+	inputs[1].type = INPUT_KEYBOARD;
+	inputs[1].ki.wVk = VK_MENU;
+	inputs[1].ki.dwFlags = KEYEVENTF_KEYUP;
+
+	::SendInput(2, inputs, sizeof(INPUT));
+}
+
 void SetForegroundWindowInternal(HWND hWnd)
 {
 	if (IsWindow(hWnd))
 	{
 		// The order in which we activate this matters. This is also duplicated in
 		// the MQPostOffice.cpp RequestActivateWindow function so changes
-		// here should be replicated there. One future update if this stops working
-		// is to cross-thread the attach to the destination hWnd, but it does not
-		// appear to be needed now and it's easier to keep these two in sync.
+		// here should be replicated there.
+		const HWND requestedWindow = hWnd;
+		const HWND rootWindow = ::GetAncestor(requestedWindow, GA_ROOT);
+		const HWND rootOwnerWindow = ::GetAncestor(requestedWindow, GA_ROOTOWNER);
+		const HWND lastActivePopup = rootOwnerWindow ? ::GetLastActivePopup(rootOwnerWindow) : nullptr;
+		const HWND activationWindow = GetShellActivationWindow(requestedWindow);
 		const DWORD ourThread = ::GetCurrentThreadId();
-		const DWORD fgThread = ::GetWindowThreadProcessId(::GetForegroundWindow(), nullptr);
+		const HWND foregroundWindow = ::GetForegroundWindow();
+		const DWORD fgThread = ::GetWindowThreadProcessId(foregroundWindow, nullptr);
+		const DWORD targetThread = ::GetWindowThreadProcessId(activationWindow, nullptr);
 		const bool attached = fgThread && fgThread != ourThread && ::AttachThreadInput(ourThread, fgThread, true);
+		const bool attachedTarget = targetThread && targetThread != ourThread && targetThread != fgThread
+			&& ::AttachThreadInput(ourThread, targetThread, true);
 		auto detach = wil::scope_exit([&]
 			{
+				if (attachedTarget)
+				{
+					::AttachThreadInput(ourThread, targetThread, false);
+				}
+
 				if (attached)
 				{
 					::AttachThreadInput(ourThread, fgThread, false);
 				}
 			});
 
-		::BringWindowToTop(hWnd);
-		::SetForegroundWindow(hWnd);
+		SPDLOG_DEBUG("SetForegroundWindowInternal: requestedWindow={}, activationWindow={}, rootWindow={}, rootOwnerWindow={}, lastActivePopup={}, foregroundWindow={}, ourThread={}, foregroundThread={}, targetThread={}, attachedForeground={}, attachedTarget={}, focusProcessID={}",
+			static_cast<void*>(requestedWindow), static_cast<void*>(activationWindow), static_cast<void*>(rootWindow),
+			static_cast<void*>(rootOwnerWindow), static_cast<void*>(lastActivePopup), static_cast<void*>(foregroundWindow),
+			ourThread, fgThread, targetThread, attached, attachedTarget, gFocusProcessID);
 
-		if (IsIconic(hWnd))
+		if (IsIconic(activationWindow))
 		{
-			ShowWindow(hWnd, SW_RESTORE);
+			ShowWindow(activationWindow, SW_RESTORE);
 		}
 
-		::SetFocus(hWnd);
+		::SetWindowPos(activationWindow, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+		::BringWindowToTop(activationWindow);
+		SPDLOG_DEBUG("SetForegroundWindowInternal: sending Alt key foreground unlock");
+		SendAltKeyUnlock();
+		::SetForegroundWindow(activationWindow);
+		::SwitchToThisWindow(activationWindow, TRUE);
+		::SetActiveWindow(activationWindow);
+		::SetFocus(activationWindow);
 
-		if (::GetForegroundWindow() != hWnd && !SendSetForegroundWindow(hWnd, gFocusProcessID))
+		const HWND newForegroundWindow = ::GetForegroundWindow();
+		const HWND activeWindow = ::GetActiveWindow();
+		const HWND focusWindow = ::GetFocus();
+		if (newForegroundWindow == activationWindow)
 		{
-			SPDLOG_DEBUG("Failed to set foreground window. Doing it with min/restore.");
+			SPDLOG_DEBUG("SetForegroundWindowInternal: activation window is foreground. activeWindow={}, focusWindow={}",
+				static_cast<void*>(activeWindow), static_cast<void*>(focusWindow));
+			if (SendSetForegroundWindow(activationWindow, gFocusProcessID))
+			{
+				SPDLOG_DEBUG("SetForegroundWindowInternal: requested focused-process activation to update shell MRU");
+			}
 
-			ShowWindow(hWnd, SW_MINIMIZE);
-			ShowWindow(hWnd, SW_RESTORE);
+			return;
+		}
+
+		SPDLOG_DEBUG("SetForegroundWindowInternal: activation window did not become foreground. currentForeground={}, activationWindow={}, activeWindow={}, focusWindow={}",
+			static_cast<void*>(newForegroundWindow), static_cast<void*>(activationWindow),
+			static_cast<void*>(activeWindow), static_cast<void*>(focusWindow));
+
+		if (!SendSetForegroundWindow(activationWindow, gFocusProcessID))
+		{
+			SPDLOG_DEBUG("SetForegroundWindowInternal: launcher-assisted activation unavailable; using min/restore fallback");
+
+			ShowWindow(activationWindow, SW_MINIMIZE);
+			ShowWindow(activationWindow, SW_RESTORE);
 		}
 	}
 }
@@ -1995,6 +2064,11 @@ int WINAPI CALLBACK WinMain(
 			}
 			else if (request->focusMode == mq::MQMessageFocusRequest::FocusMode::WantFocus)
 			{
+				if (request->processId != 0)
+				{
+					SetFocusWindowPID(request->processId, true);
+				}
+
 				SetForegroundWindowInternal(static_cast<HWND>(request->hWnd));
 			}
 		});

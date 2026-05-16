@@ -72,6 +72,7 @@ using namespace eqlib;
 #include "mq/utils/Keybinds.h"
 
 #include "mq/api/Main.h"
+#include "mq/api/Overlay.h"
 #include "mq/api/DetourAPI.h"
 #include "mq/api/MacroAPI.h"
 #include "mq/api/PluginAPI.h"
@@ -84,6 +85,10 @@ void InitializeMQ2Benchmarks();
 
 void InitializeDisplayHook();
 void ShutdownDisplayHook();
+
+void InitializeOverlayService();
+void ShutdownOverlayService();
+void RemoveOverlayCallbacksForPlugin(MQPluginHandle owner);
 
 void InitializeMQ2Pulse();
 void ShutdownMQ2Pulse();

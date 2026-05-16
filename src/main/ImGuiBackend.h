@@ -112,6 +112,7 @@ float    ImGui_ImplWin32_GetDpiScaleForMonitor(void* monitor);
 
 void     ImGui_EnableViewports(bool enable);
 void     ImGui_EnableDocking(bool enable);
+void     ImGui_RaiseViewports();
 bool     ImGui_IsImGuiForeground();
 
 // Implemented by ImGuiOverlay.cpp

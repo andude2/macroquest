@@ -862,7 +862,14 @@ bool MQ2CharacterType::GetMember(MQVarPtr VarPtr, const char* Member, char* Inde
 
 	case CharacterMembers::PctHPs:
 		Dest.Type = pIntType;
-		Dest.Int = GetMaxHPS() == 0 ? 0 : GetCurHPS() * 100 / GetMaxHPS();
+		if (float overlayPct = mq::GetOverlayHealthPercent(); overlayPct >= 0.0f)
+		{
+			Dest.Int = static_cast<int>(std::lround(overlayPct));
+		}
+		else
+		{
+			Dest.Int = GetMaxHPS() == 0 ? 0 : GetCurHPS() * 100 / GetMaxHPS();
+		}
 		return true;
 
 	case CharacterMembers::CurrentMana:

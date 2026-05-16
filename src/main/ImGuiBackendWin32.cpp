@@ -1589,6 +1589,34 @@ void ImGui_EnableDocking(bool enable)
 	}
 }
 
+void ImGui_RaiseViewports()
+{
+	if (ImGui::GetCurrentContext() == nullptr)
+		return;
+
+	ImGuiIO& io = ImGui::GetIO();
+	if ((io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) == 0)
+		return;
+
+	ImGuiViewport* mainViewport = ImGui::GetMainViewport();
+	const auto& platform_io = ImGui::GetPlatformIO();
+
+	for (ImGuiViewport* viewport : platform_io.Viewports)
+	{
+		if (viewport == nullptr || viewport == mainViewport)
+			continue;
+
+		HWND hWnd = viewport->PlatformHandleRaw
+			? static_cast<HWND>(viewport->PlatformHandleRaw)
+			: static_cast<HWND>(viewport->PlatformHandle);
+		if (hWnd == nullptr || !::IsWindow(hWnd))
+			continue;
+
+		::SetWindowPos(hWnd, HWND_TOP, 0, 0, 0, 0,
+			SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+	}
+}
+
 bool ImGui_IsImGuiForeground()
 {
 	if (ImGui::GetCurrentContext() == nullptr)

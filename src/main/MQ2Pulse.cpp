@@ -18,6 +18,7 @@
 
 #include "MQ2Main.h"
 #include "CrashHandler.h"
+#include "ImGuiBackend.h"
 #include "ImGuiManager.h"
 #include "Logging.h"
 
@@ -69,6 +70,54 @@ static void ProcessQueuedEvents()
 
 	for (auto& ev : events)
 		std::invoke(ev);
+}
+
+//----------------------------------------------------------------------------
+
+static HWND GetShellActivationWindow(HWND hWnd)
+{
+	HWND rootWindow = ::GetAncestor(hWnd, GA_ROOT);
+	if (rootWindow)
+		hWnd = rootWindow;
+
+	HWND rootOwnerWindow = ::GetAncestor(hWnd, GA_ROOTOWNER);
+	if (rootOwnerWindow)
+		hWnd = rootOwnerWindow;
+
+	HWND lastActivePopup = ::GetLastActivePopup(hWnd);
+	if (lastActivePopup && ::IsWindowVisible(lastActivePopup))
+		hWnd = lastActivePopup;
+
+	return hWnd;
+}
+
+static HWND GetCurrentEQWindowHandle()
+{
+	if (EQW_GetDisplayWindow)
+		return EQW_GetDisplayWindow();
+
+	if (EQADDR_HWND)
+	{
+		HWND hWnd = *reinterpret_cast<HWND*>(EQADDR_HWND);
+		if (::IsWindow(hWnd))
+			return hWnd;
+	}
+
+	return GetEQWindowHandle();
+}
+
+static bool IsEQForeground()
+{
+	HWND eqWindow = GetCurrentEQWindowHandle();
+	HWND foregroundWindow = ::GetForegroundWindow();
+
+	if (!eqWindow || !foregroundWindow)
+		return false;
+
+	if (foregroundWindow == eqWindow)
+		return true;
+
+	return GetShellActivationWindow(foregroundWindow) == GetShellActivationWindow(eqWindow);
 }
 
 //----------------------------------------------------------------------------
@@ -451,13 +500,11 @@ static void CheckGameState()
 
 static void Pulse()
 {
-	static HWND EQhWnd = *(HWND*)EQADDR_HWND;
-	if (EQW_GetDisplayWindow)
-		EQhWnd = EQW_GetDisplayWindow();
-
-	if (mq::test_and_set(gbInForeground, (GetForegroundWindow() == EQhWnd)))
+	if (mq::test_and_set(gbInForeground, IsEQForeground()))
 	{
 		pipeclient::NotifyIsForegroundWindow(gbInForeground);
+		if (gbInForeground)
+			ImGui_RaiseViewports();
 	}
 
 	// handle queued events.
@@ -686,6 +733,10 @@ static HeartbeatState Heartbeat()
 			DebugSpew("GetGameState()=%d vs %d", GameState, gGameState);
 			gGameState = GameState;
 			gbInZone = (gGameState == GAMESTATE_INGAME || gGameState == GAMESTATE_CHARSELECT || gGameState == GAMESTATE_CHARCREATE);
+			if (gGameState != GAMESTATE_INGAME)
+			{
+				ResetOverlayHealthPercent();
+			}
 			DebugTry(Benchmark(bmPluginsSetGameState, PluginsSetGameState(GameState)));
 		}
 

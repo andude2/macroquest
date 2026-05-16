@@ -320,6 +320,9 @@
     <ClCompile Include="MQ2DeveloperTools.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MQOverlay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="MQ2Items.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

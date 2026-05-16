@@ -697,6 +697,7 @@ bool UnloadPlugin(std::string_view pluginName, bool save /* = false */)
 
 		s_pluginMap.erase(iter);
 		s_pluginHandleMap.erase(rec.handle.pluginID);
+		RemoveOverlayCallbacksForPlugin(rec.handle);
 	}
 
 	ShutdownPlugin(rec);
