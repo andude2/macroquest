@@ -23,8 +23,6 @@
 #include "mq/base/Config.h"
 #include "mq/base/String.h"
 
-#include "spdlog/spdlog.h"
-
 #include <shellapi.h>
 
 static std::optional<std::string> s_iniLocation;
@@ -145,10 +143,15 @@ void LauncherPostOffice::OnIncomingMessage(mq::postoffice::LocalConnection* conn
 		}
 		break;
 
-	case mq::MQMessageId::MSG_MAIN_DEBUG_LOG:
-		if (message->size() > 0)
+	case mq::MQMessageId::MSG_MAIN_SELF_MIN_RESTORE:
+		// Route by hWnd payload since that's our target.
+		if (message->size() >= sizeof(MQMessageActivateWnd))
 		{
-			SPDLOG_DEBUG("{}", message->get<const char>());
+			const HWND hWnd = (HWND)message->get<MQMessageActivateWnd>()->hWnd;
+			if (!SendSelfMinRestore(hWnd))
+			{
+				SPDLOG_DEBUG("MSG_MAIN_SELF_MIN_RESTORE: Routing failed.");
+			}
 		}
 		break;
 
@@ -242,24 +245,37 @@ bool SendSetForegroundWindow(HWND hWnd, uint32_t processID)
 			mq::MQMessageActivateWnd message;
 			message.hWnd = hWnd;
 
-			SPDLOG_DEBUG("SendSetForegroundWindow: sending activation request. hWnd={}, processID={}, connectionId={}",
-				static_cast<void*>(hWnd), processID, pipeConnection->GetConnectionId());
-
 			s_postOffice->SendPipeMessage(pipeConnection->GetConnectionId(),
 				mq::MQMessageId::MSG_MAIN_FOCUS_ACTIVATE_WND, &message, sizeof(message));
 
 			return true;
 		}
-
-		SPDLOG_DEBUG("SendSetForegroundWindow: no pipe connection for focus process. hWnd={}, processID={}",
-			static_cast<void*>(hWnd), processID);
-
-		return false;
 	}
 
-	SPDLOG_DEBUG("SendSetForegroundWindow: unavailable. hWnd={}, processID={}, postOfficeAvailable={}",
-		static_cast<void*>(hWnd), processID, s_postOffice != nullptr);
-	
+	return false;
+}
+
+bool SendSelfMinRestore(HWND hWnd)
+{
+	if (s_postOffice && hWnd)
+	{
+		DWORD pid = 0;
+		::GetWindowThreadProcessId(hWnd, &pid);
+		if (pid != 0)
+		{
+			if (auto pipeConnection = s_postOffice->GetConnectionForProcessId(pid))
+			{
+				mq::MQMessageActivateWnd message;
+				message.hWnd = hWnd;
+
+				s_postOffice->SendPipeMessage(pipeConnection->GetConnectionId(),
+					mq::MQMessageId::MSG_MAIN_SELF_MIN_RESTORE, &message, sizeof(message));
+
+				return true;
+			}
+		}
+	}
+
 	return false;
 }
 
