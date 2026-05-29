@@ -68,4 +68,60 @@ inline bool IsInModuleList(const char* moduleName, int processID = GetCurrentPro
 	return false;
 }
 
+/**
+ * @fn BringWindowToForeground
+ *
+ * @brief Brings a window to the foreground using the AttachThreadInput technique
+ *
+ * Attaches the calling thread's input queue to both the current foreground
+ * thread and the target window's thread so that SetForegroundWindow, SetFocus,
+ * and SetActiveWindow take effect across processes. The caller must have
+ * foreground privilege (be the foreground process, or have been granted it via
+ * AllowSetForegroundWindow). The order of operations matters due to how Windows
+ * activates the window. The below order is meant to minimize ghost windows
+ * and situations where the window appears active and is functioanlly active
+ * but is not in the correct MRU order or doesn't have the active title bar.
+ *
+ * Beware: Here there be dragons.
+ *
+ * @param hWnd The window to bring to the foreground
+ **/
+inline void BringWindowToForeground(HWND hWnd)
+{
+	// Attempt to restore the window before the activation dance
+	if (IsIconic(hWnd))
+	{
+		ShowWindow(hWnd, SW_RESTORE);
+	}
+
+	const DWORD ourThread = ::GetCurrentThreadId();
+	const DWORD fgThread = ::GetWindowThreadProcessId(::GetForegroundWindow(), nullptr);
+	const DWORD tgtThread = ::GetWindowThreadProcessId(hWnd, nullptr);
+	const bool attachedFg = fgThread && fgThread != ourThread && ::AttachThreadInput(ourThread, fgThread, true);
+	const bool attachedTgt = tgtThread && tgtThread != ourThread && tgtThread != fgThread && ::AttachThreadInput(ourThread, tgtThread, true);
+	auto detach = wil::scope_exit([&]
+		{
+			if (attachedTgt)
+			{
+				::AttachThreadInput(ourThread, tgtThread, false);
+			}
+			if (attachedFg)
+			{
+				::AttachThreadInput(ourThread, fgThread, false);
+			}
+		});
+
+	::SetForegroundWindow(hWnd);
+	::BringWindowToTop(hWnd);
+
+	// Re-check: the first restore may fail before the activation dance.
+	if (IsIconic(hWnd))
+	{
+		ShowWindow(hWnd, SW_RESTORE);
+	}
+
+	::SetFocus(hWnd);
+	::SetActiveWindow(hWnd);
+}
+
 } // namespace mq
