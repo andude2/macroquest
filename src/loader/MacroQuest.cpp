@@ -694,17 +694,14 @@ void SetForegroundWindowInternal(HWND hWnd)
 			return;
 		}
 
-		// Activation only works reliably when the target's own process does it
-		// with foreground privilege. We never activate the window ourselves.
 		DWORD fgPid = 0;
 		::GetWindowThreadProcessId(::GetForegroundWindow(), &fgPid);
 		const bool weAreForeground = (fgPid == GetCurrentProcessId());
 
 		if (weAreForeground)
 		{
-			// The launcher itself is foreground (e.g. a hotkey pressed with the
-			// launcher window focused). We have privilege, so grant it to the
-			// target and ask it to foreground itself.
+			// The launcher itself is foreground. We have privilege, so grant it to the
+			// target and ask it to foreground itself. Us foregrounding it has odd behavior.
 			DWORD targetPid = 0;
 			::GetWindowThreadProcessId(hWnd, &targetPid);
 			if (targetPid != 0)
@@ -717,9 +714,9 @@ void SetForegroundWindowInternal(HWND hWnd)
 				SPDLOG_DEBUG("SendSelfForeground failed (no pipe connection for target's owning process).");
 			}
 		}
+		// If we don't have privilege then try to route via an EQ instance that does that does.
 		else if (!SendSetForegroundWindow(hWnd, gFocusProcessID))
 		{
-			// No privilege and no foreground EQ to route through.
 			SPDLOG_DEBUG("SendSetForegroundWindow failed (no foregrounded MQ process). Falling back to SendSelfMinRestore.");
 
 			if (!SendSelfMinRestore(hWnd))

@@ -107,8 +107,10 @@ void MQPostOffice::RequestActivateWindow(HWND hWnd, bool isOriginator)
 
 	if (!isOriginator)
 	{
-		// We should be the foreground instance. Don't activate the target ourselves — that produces odd results.
-		// Just set the ability for the target to activate itself, and ask it to do so.
+		// The launcher itself is foreground. 
+
+		// We should be the foreground instance. We have privilege, so grant it to the
+		// target and ask it to foreground itself. Us foregrounding it has odd behavior.
 		DWORD targetPid = 0;
 		::GetWindowThreadProcessId(hWnd, &targetPid);
 		if (targetPid != 0)
@@ -269,13 +271,6 @@ void MQPostOffice::OnIncomingMessage(PipeMessagePtr message)
 		break;
 
 	case MQMessageId::MSG_MAIN_SELF_FOREGROUND:
-		// The foreground EQ granted us AllowSetForegroundWindow permission and is
-		// asking us to take foreground ourselves. A plain SetForegroundWindow
-		// from our own process is treated as user-initiated by Windows, so focus,
-		// MRU, and title-bar state all update correctly. Do NOT use the
-		// AttachThreadInput dance here — it reintroduces the half-state where the
-		// window surfaces but never truly gets focus. Fall back to same-process
-		// min/restore only if the plain call doesn't take.
 		if (message->size() >= sizeof(MQMessageActivateWnd))
 		{
 			const HWND hWnd = (HWND)message->get<MQMessageActivateWnd>()->hWnd;
