@@ -334,7 +334,7 @@ static void CheckGameValidity()
 {
 #if IS_LIVE_CLIENT
 	static constexpr uint8_t salt[8] = {0x04, 0xc4, 0x57, 0xbf, 0x31, 0xd3, 0x62, 0x5a};
-	static constexpr uint8_t hashes[29][8] = {
+	static constexpr uint8_t hashes[30][8] = {
 		{0xc3, 0x33, 0x27, 0x8c, 0xc9, 0x9c, 0x4f, 0xe1},
 		{0x11, 0xa7, 0xac, 0x4a, 0x03, 0x79, 0x29, 0xb8},
 		{0x72, 0x63, 0x78, 0xde, 0x7c, 0xb6, 0xfe, 0xa2},
@@ -364,6 +364,7 @@ static void CheckGameValidity()
 		{0x55, 0x05, 0xd0, 0x79, 0xac, 0x5c, 0xdf, 0xe6},
 		{0xfb, 0x37, 0x77, 0x6a, 0xee, 0xe0, 0x6b, 0xc5},
 		{0x9b, 0xc2, 0x73, 0x3f, 0xb8, 0xa1, 0xf3, 0xff},
+		{0x37, 0x7a, 0xd0, 0x06, 0xe4, 0x24, 0x9e, 0xf3},
 	};
 
 	const auto now = std::chrono::steady_clock::now();
@@ -526,24 +527,25 @@ static void Pulse()
 	SPAWNINFO* pChar = pCharOrMount = pControlledPlayer;
 
 	// Drop out here if we're waiting for something.
-	if (!pChar || gZoning) return;
-	if (!pLocalPC) return;
+	if (!pChar || gZoning)
+		return;
+	if (!pLocalPC)
+		return;
 
 	if (pLocalPlayer)
 		pChar = pLocalPlayer;
 
 	static int16_t LastZone = -1;
-	static SPAWNINFO* pCharOld = nullptr;
 	static float LastX = 0.0f;
 	static float LastY = 0.0f;
 	static uint64_t LastMoveTick = 0;
 	static uint32_t MapDelay = 0;
 
-	if (pChar != pCharOld && WereWeZoning)
+	// This relies on the early out for pChar and pLocalPC above
+	if (WereWeZoning)
 	{
 		// Reset after zoning completes
 		WereWeZoning = false;
-		pCharOld = pChar;
 		gFaceAngle = 10000.0f;
 		gLookAngle = 10000.0f;
 		gbMoving = false;
