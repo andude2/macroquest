@@ -17,6 +17,7 @@
 #include "ImGuiManager.h"
 #include "MQ2Main.h"
 #include "MQPluginHandler.h"
+#include "rmlui/RmlUiManager.h"
 
 namespace mq {
 
@@ -46,6 +47,7 @@ static bool s_uiInitialized = false;
 static void ShutdownUI()
 {
 	s_uiInitialized = false;
+	rmlui::InvalidateEqUiTextures();
 
 	{
 		MQScopedBenchmark bm(bmPluginsCleanUI);
@@ -199,7 +201,9 @@ static void Cmd_NetStatusYPos(SPAWNINFO* pChar, char* szLine)
 	}
 }
 
-static std::vector<std::string> s_oldStrings;
+// These strings are owned by eqgame. Keep the original pointers so shutdown can
+// restore them without leaving eqgame pointing into storage owned by MQ2Main.
+static std::vector<const char*> s_oldStrings;
 
 static void DisplayHook_Initialize()
 {
@@ -248,10 +252,11 @@ static void DisplayHook_Shutdown()
 		const char** ptr = (const char**)EQ_LoadingS__Array;
 		int j = 0;
 
-		for (const std::string& str : s_oldStrings)
+		for (const char* str : s_oldStrings)
 		{
-			ptr[j++] = str.c_str();
+			ptr[j++] = str;
 		}
+		s_oldStrings.clear();
 	}
 #endif
 

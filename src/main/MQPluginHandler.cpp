@@ -23,6 +23,7 @@
 #include <random>
 
 #include "MQCommandAPI.h"
+#include "OverlayInput.h"
 #include "imgui/imanim/im_anim.h"
 
 //#define DEBUG_PLUGINS
@@ -698,6 +699,8 @@ bool UnloadPlugin(std::string_view pluginName, bool save /* = false */)
 		s_pluginMap.erase(iter);
 		s_pluginHandleMap.erase(rec.handle.pluginID);
 		RemoveOverlayCallbacksForPlugin(rec.handle);
+		RemoveRmlDocumentsForPlugin(rec.handle);
+		RemoveOverlayInputConsumersForPlugin(rec.handle);
 	}
 
 	ShutdownPlugin(rec);

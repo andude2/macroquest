@@ -18,6 +18,7 @@
 #include "LuaEvent.h"
 #include "LuaImGui.h"
 #include "LuaActor.h"
+#include "LuaRmlUi.h"
 #include "LuaModuleRegistry.h"
 #include "bindings/lua_Bindings.h"
 #include "bindings/lua_MQBindings.h"
@@ -368,6 +369,7 @@ LuaThread::LuaThread(this_is_private&&, LuaEnvironmentSettings* environment)
 
 LuaThread::~LuaThread()
 {
+	LuaRmlUi::Shutdown(this);
 	RemoveAllDataObjects();
 
 	m_imguiProcessor.reset();
@@ -417,6 +419,10 @@ void LuaThread::Exit(LuaThreadExitReason reason)
 		return;
 
 	m_exitReason = reason;
+	// An RmlUi event can be the action that stops this script. Detach its
+	// documents and Lua registry callbacks immediately, before the remainder of
+	// the pulse can observe a state that is already exiting.
+	LuaRmlUi::Shutdown(this);
 	YieldAt(0);
 
 	OnLuaThreadDestroyed(this);

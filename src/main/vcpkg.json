@@ -15,6 +15,7 @@
       "protobuf",
       "sqlite3",
       "argon2",
+      { "name": "rmlui", "version>=": "6.3" },
       "dxsdk-d3dx"
   ]
 }

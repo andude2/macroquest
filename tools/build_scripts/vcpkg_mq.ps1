@@ -40,6 +40,7 @@ $env:VCPKG_FORCE_DOWNLOADED_BINARIES = "1"
 
 $vcpkg_root = "$MQRoot\contrib\vcpkg"
 $vcpkg_overlay_ports = "$MQRoot\contrib\vcpkg-overlays\msbuild"
+$vcpkg_rmlui_overlay_port = "$MQRoot\contrib\vcpkg-overlays\cmake\rmlui"
 $vcpkg_overlay_triplets = "$MQRoot\contrib\vcpkg-overlays\triplets"
 $vcpkg_use_overlays = $true
 $vcpkg_triplet = "$Platform-windows-static"
@@ -284,7 +285,7 @@ foreach ($triplet in $tripletsToCheck) {
 # If we did a bootstrap and we already had installed packages
 if ($performBootstrap -And $vcpkgTable.Count -ne 0) {
     if ($vcpkg_use_overlays) {
-        & ./vcpkg.exe upgrade --no-dry-run --overlay-ports="$vcpkg_overlay_ports" --overlay-triplets="$vcpkg_overlay_triplets"
+        & ./vcpkg.exe upgrade --no-dry-run --overlay-ports="$vcpkg_overlay_ports" --overlay-ports="$vcpkg_rmlui_overlay_port" --overlay-triplets="$vcpkg_overlay_triplets"
     } else {
         & ./vcpkg.exe upgrade --no-dry-run
     }
@@ -302,6 +303,30 @@ if ($performBootstrap -And $vcpkgTable.Count -ne 0) {
     }
     # Packages may have changed, so rebuild the list
     $vcpkgTable = Get-VcpkgTable
+}
+
+# RmlUi is supplied as a local CMake port overlay. The MSBuild manifest list
+# only records package names, so explicitly refresh an installed older release
+# when the overlay's version has advanced.
+$rmlui_port_manifest = "$vcpkg_rmlui_overlay_port\vcpkg.json"
+$rmlui_installed_version_file = "$vcpkg_root\installed\$vcpkg_triplet\share\rmlui\RmlUiConfigVersion.cmake"
+if ((Test-Path -Path "$rmlui_port_manifest" -PathType Leaf) -And
+    (Test-Path -Path "$rmlui_installed_version_file" -PathType Leaf) -And
+    $vcpkgTable.ContainsKey($vcpkg_triplet) -And
+    $vcpkgTable[$vcpkg_triplet].ContainsKey("rmlui")) {
+    $rmlui_expected_version = (Get-Content -Raw "$rmlui_port_manifest" | ConvertFrom-Json).version
+    $rmlui_version_match = Select-String -Path "$rmlui_installed_version_file" -Pattern 'set\(PACKAGE_VERSION "([^"]+)"\)'
+    if ($rmlui_expected_version -And $rmlui_version_match -And
+        ([version]$rmlui_version_match.Matches[0].Groups[1].Value -lt [version]$rmlui_expected_version)) {
+        Write-Host "Refreshing installed RmlUi $($rmlui_version_match.Matches[0].Groups[1].Value) to local overlay version $rmlui_expected_version..."
+        & ./vcpkg.exe remove "rmlui:$vcpkg_triplet"
+        if ($LASTEXITCODE -ne 0) {
+            Write-Error "Could not remove the older RmlUi package before installing the local overlay version."
+            Set-Location $startingDirectory
+            exit 1
+        }
+        $vcpkgTable[$vcpkg_triplet].Remove("rmlui")
+    }
 }
 
 $vcpkgInstallTable = @{}
@@ -370,7 +395,7 @@ foreach ($file in $vcpkg_file_list) {
 if ($vcpkgInstallTable.Count -ne 0) {
     RunPreCheck
     if ($vcpkg_use_overlays) {
-        $vcpkg_command = "install --x-wait-for-lock --overlay-ports=`"$vcpkg_overlay_ports`" --overlay-triplets=`"$vcpkg_overlay_triplets`""
+        $vcpkg_command = "install --x-wait-for-lock --overlay-ports=`"$vcpkg_overlay_ports`" --overlay-ports=`"$vcpkg_rmlui_overlay_port`" --overlay-triplets=`"$vcpkg_overlay_triplets`""
     } else {
         $vcpkg_command = "install --x-wait-for-lock"
     }

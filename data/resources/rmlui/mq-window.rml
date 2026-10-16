@@ -1,0 +1,20 @@
+<template name="mq-window" content="window-content">
+<head>
+  <link type="text/rcss" href="mq://rmlui/mq-theme-default.rcss" />
+  <link type="text/rcss" href="mq://rmlui/mq-window.rcss" />
+</head>
+<body class="mq-viewport">
+  <div id="window" class="mq-window">
+    <handle id="window-handle" class="mq-window-titlebar" move_target="#parent">
+      <h1 id="window-title" class="mq-window-title">MacroQuest RmlUi</h1>
+    </handle>
+    <div id="window-content" class="mq-window-content"></div>
+    <div class="mq-window-resize-footer">
+      <handle id="resize-handle" class="mq-window-resize-handle"
+          size_target="window" edge_margin="20px">
+        <div class="mq-window-resize-icon">+</div>
+      </handle>
+    </div>
+  </div>
+</body>
+</template>

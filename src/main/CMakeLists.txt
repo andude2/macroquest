@@ -18,6 +18,7 @@ find_package(protobuf REQUIRED)
 find_package(unofficial-sqlite3 REQUIRED)
 find_package(unofficial-argon2 REQUIRED)
 find_package(dxsdk-d3dx REQUIRED)
+find_package(RmlUi CONFIG REQUIRED)
 
 # ---------------------------------------------------------------------
 # Header files
@@ -42,6 +43,7 @@ set(MQ2Main_HEADERS
     "../../include/mq/api/Main.h"
     "../../include/mq/api/PluginAPI.h"
     "../../include/mq/api/RenderDoc.h"
+    "../../include/mq/api/RmlUi.h"
     "../../include/mq/api/Spawns.h"
     "../../include/mq/api/Spells.h"
     "../../include/mq/api/Textures.h"
@@ -86,6 +88,10 @@ set(MQ2Main_HEADERS
     "emu/EmuExtensions.h"
     "GraphicsEngine.h"
     "GraphicsResources.h"
+    "rmlui/RmlUiManager.h"
+    "rmlui/RmlUiModel.h"
+    "rmlui/RmlUiRendererDX9.h"
+    "rmlui/RmlUiResizeEdge.h"
     "ImGuiAlphaMask.h"
     "ImGuiBackend.h"
     "ImGuiManager.h"
@@ -111,6 +117,7 @@ set(MQ2Main_HEADERS
     "MQPluginHandler.h"
     "MQRenderDoc.h"
     "MQVersionInfo.h"
+    "OverlayInput.h"
     "pch.h"
     "MQPostOffice.h"
     "resource.h"
@@ -128,6 +135,12 @@ set(MQ2Main_OTHERFILES
     "../../data/resources/Zones.ini"
     "../../LICENSE.md"
     "../../data/resources/ItemDB.txt"
+    "../../data/resources/rmlui/README.md"
+    "../../data/resources/rmlui/mq-window.rml"
+    "../../data/resources/rmlui/mq-window.rcss"
+    "../../data/resources/rmlui/mq-components.rcss"
+    "../../data/resources/rmlui/components.rml"
+    "../../data/resources/rmlui/components.rcss"
 )
 
 source_group("Resource Files" FILES ${MQ2Main_OTHERFILES})
@@ -147,6 +160,11 @@ source_groups("Assembly Files" ${MQ2Main_ASSEMBLY})
 set(MQ2Main_SOURCES
     "../../contrib/mini-yaml/yaml/Yaml.cpp"
     "../common/HotKeys.cpp"
+    "rmlui/RmlUiManager.cpp"
+    "rmlui/RmlUiModel.cpp"
+    "rmlui/RmlUiRendererDX9.cpp"
+    "rmlui/RmlUiResizeEdge.cpp"
+    "rmlui/RmlUiValue.cpp"
     "api/Abilities.cpp"
     "api/Spawns.cpp"
     "datatypes/MQ2AchievementType.cpp"
@@ -255,6 +273,7 @@ set(MQ2Main_SOURCES
     "MQAchievements.cpp"
     "MQInventory.cpp"
     "MQRenderDoc.cpp"
+    "OverlayInput.cpp"
     "CrashHandler.cpp"
     "ImGuiManager.cpp"
 )
@@ -355,6 +374,16 @@ add_library(MQ2Main ${LIB_TYPE}
 
 set_target_properties(MQ2Main PROPERTIES FOLDER "core")
 
+# Keep the development output self-contained. RmlUi documents are runtime
+# resources rather than compiled assets, so copying the directory after a core
+# build makes new shared components immediately available to /rmlui and Lua.
+add_custom_command(TARGET MQ2Main POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_SOURCE_DIR}/data/resources/rmlui"
+        "$<TARGET_FILE_DIR:MQ2Main>/resources/rmlui"
+    COMMENT "Copying MacroQuest RmlUi resources"
+)
+
 # ---------------------------------------------------------------------
 # Output name customization
 # ---------------------------------------------------------------------
@@ -395,6 +424,7 @@ target_link_libraries(MQ2Main PRIVATE
     unofficial::sqlite3::sqlite3
     unofficial::argon2::libargon2
     Microsoft::D3DX9
+    RmlUi::RmlUi
 )
 
 # ---------------------------------------------------------------------

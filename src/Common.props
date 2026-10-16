@@ -24,8 +24,11 @@
     <MQ2MainLibs Condition="'$(MQConfig)' == 'Release'">fmt.lib;psapi.lib;version.lib;pathcch.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;vcpkg_crashpad_base.lib;vcpkg_crashpad_client_common.lib;vcpkg_crashpad_client.lib;vcpkg_crashpad_util.lib;sqlite3.lib</MQ2MainLibs>
     <ImGuiLibs Condition="'$(MQConfig)' == 'Debug'">freetyped.lib</ImGuiLibs>
     <ImGuiLibs Condition="'$(MQConfig)' == 'Release'">freetype.lib</ImGuiLibs>
+    <D3DX9Lib Condition="'$(MQConfig)' == 'Debug'">d3dx9d.lib</D3DX9Lib>
+    <D3DX9Lib Condition="'$(MQConfig)' == 'Release'">d3dx9.lib</D3DX9Lib>
+    <RmlUiLibs>rmlui.lib;$(ImGuiLibs);$(D3DX9Lib)</RmlUiLibs>
 
-    <MQAmalgamLibs>MQ2Main-static.lib;$(MQ2MainLibs);$(ImGuiLibs)</MQAmalgamLibs>
+    <MQAmalgamLibs>MQ2Main-static.lib;$(MQ2MainLibs);$(ImGuiLibs);$(RmlUiLibs)</MQAmalgamLibs>
     <MQAmalgamDefines>MQLIB_STATIC;EQLIB_STATIC;IMGUI_STATIC</MQAmalgamDefines>
 
     <!-- vcpkg paths -->

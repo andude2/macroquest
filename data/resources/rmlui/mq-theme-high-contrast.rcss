@@ -1,0 +1,35 @@
+/* Include after the default theme for stronger contrast and focus indication. */
+body {
+  --mq-color-window: #000000;
+  --mq-color-window-border: #ffffff;
+  --mq-color-titlebar: #101010;
+  --mq-color-surface: #050505;
+  --mq-color-surface-raised: #101010;
+  --mq-color-surface-control: #101010;
+  --mq-color-surface-hover: #303030;
+  --mq-color-surface-pressed: #202020;
+  --mq-color-surface-input: #000000;
+  --mq-color-surface-track: #303030;
+  --mq-color-surface-badge: #303030;
+  --mq-color-surface-tooltip: #000000;
+  --mq-color-surface-divider: #ffffff;
+  --mq-color-border: #ffffff;
+  --mq-color-border-control: #ffffff;
+  --mq-color-border-hover: #ffff00;
+  --mq-color-border-tooltip: #ffffff;
+  --mq-color-text: #ffffff;
+  --mq-color-text-strong: #ffffff;
+  --mq-color-text-muted: #e0e0e0;
+  --mq-color-accent: #005fcc;
+  --mq-color-accent-hover: #0077ff;
+  --mq-color-accent-border: #ffffff;
+  --mq-color-accent-soft: #00264d;
+  --mq-color-focus: #ffff00;
+  --mq-color-success: #9cff9c;
+  --mq-color-success-surface: #003300;
+  --mq-color-warning: #ffff00;
+  --mq-color-warning-surface: #332b00;
+  --mq-color-danger: #ffb3b3;
+  --mq-color-danger-surface: #4d0000;
+  --mq-border-width: 2px;
+}

@@ -1,0 +1,36 @@
+<rml>
+<head>
+  <title>RmlUi Virtual List</title>
+  <link type="text/template" href="mq://rmlui/mq-window.rml" />
+  <link type="text/rcss" href="mq://rmlui/mq-components.rcss" />
+  <link type="text/rcss" href="virtual-list.rcss" />
+</head>
+<body template="mq-window">
+  <div id="virtual-list-root" data-model="list">
+    <div class="mq-row mq-gap-sm">
+      <span class="mq-grow">10,000 source records · fixed 26px rows</span>
+      <button id="scroll-top" class="mq-button">Top</button>
+      <button id="scroll-bottom" class="mq-button">Bottom</button>
+      <button id="append-row" class="mq-button primary">Append</button>
+    </div>
+    <div class="mq-row mq-gap-sm list-status">
+      <span>{{ realized_count }} realized / {{ total_rows }} total</span>
+      <span class="mq-muted">Selected: {{ selected_label }}</span>
+    </div>
+    <div id="list-viewport">
+      <div id="list-rows">
+        <div class="list-spacer" data-style-height="top_padding_css"></div>
+        <div class="virtual-row" data-for="row : rows"
+            data-class-selected="row.selected"
+            data-attr-data-mq-value="row.key">
+          <span class="row-id">{{ row.key }}</span>
+          <span class="row-name">{{ row.name }}</span>
+          <span class="row-zone">{{ row.zone }}</span>
+          <span class="row-level">{{ row.level }}</span>
+        </div>
+        <div class="list-spacer" data-style-height="bottom_padding_css"></div>
+      </div>
+    </div>
+  </div>
+</body>
+</rml>

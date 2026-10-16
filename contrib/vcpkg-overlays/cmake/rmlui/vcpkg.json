@@ -1,0 +1,25 @@
+{
+  "name": "rmlui",
+  "version": "6.3",
+  "maintainers": "RmlUi upstream",
+  "description": "RmlUi 6.3 with MacroQuest's external itlib and robin-hood dependencies",
+  "homepage": "https://github.com/mikke89/RmlUi",
+  "documentation": "https://mikke89.github.io/RmlUiDoc/",
+  "license": "MIT",
+  "dependencies": [
+    "itlib",
+    "robin-hood-hashing",
+    { "name": "vcpkg-cmake", "host": true },
+    { "name": "vcpkg-cmake-config", "host": true }
+  ],
+  "default-features": ["freetype"],
+  "features": {
+    "freetype": {
+      "description": "Include font engine based on FreeType",
+      "dependencies": [{ "name": "freetype", "default-features": false }]
+    },
+    "lottie": { "description": "Enable plugin for lottie animations", "dependencies": ["rlottie"] },
+    "lua": { "description": "Build Lua bindings", "dependencies": ["lua"] },
+    "svg": { "description": "Enable plugin for SVG images", "dependencies": ["lunasvg"] }
+  }
+}

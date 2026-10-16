@@ -236,24 +236,56 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MQTargetBurst", "..\plugins
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MQChat", "..\plugins\MQChat\MQChat.vcxproj", "{90C971A9-50B5-E4AB-B2E4-2E8EB3AF1DF4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2A0A06A4-E9C6-4229-82EE-BD2D4E0A7221} = {2A0A06A4-E9C6-4229-82EE-BD2D4E0A7221}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MQ2Bandolier", "..\plugins\MQ2Bandolier\MQ2Bandolier.vcxproj", "{AE95066D-3F05-E1DC-A7DF-A16AA448FB6F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2A0A06A4-E9C6-4229-82EE-BD2D4E0A7221} = {2A0A06A4-E9C6-4229-82EE-BD2D4E0A7221}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MQ2GroupInfo", "..\plugins\MQ2GroupInfo\MQ2GroupInfo.vcxproj", "{C6135A94-B68B-4196-AB2F-BADB6EA84641}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2A0A06A4-E9C6-4229-82EE-BD2D4E0A7221} = {2A0A06A4-E9C6-4229-82EE-BD2D4E0A7221}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MQ2EQBC", "..\plugins\MQ2EQBC\MQ2EQBC.vcxproj", "{49E2501B-5EDB-C708-272B-819C53BEB0E5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2A0A06A4-E9C6-4229-82EE-BD2D4E0A7221} = {2A0A06A4-E9C6-4229-82EE-BD2D4E0A7221}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EQBCS", "..\plugins\MQ2EQBC\server\EQBCS.vcxproj", "{EF4156BA-DF16-4B4D-B1FD-2BB58DB869E6}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MQ2NetBots", "..\plugins\MQ2NetBots\MQ2NetBots.vcxproj", "{8E104C79-88D5-4BCB-B642-2F0FE3D67A3E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2A0A06A4-E9C6-4229-82EE-BD2D4E0A7221} = {2A0A06A4-E9C6-4229-82EE-BD2D4E0A7221}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MQNameplates", "..\plugins\MQAnimatedNameplates\MQNameplates.vcxproj", "{CE058CC6-2C91-533C-13B2-FE0529E641C4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2A0A06A4-E9C6-4229-82EE-BD2D4E0A7221} = {2A0A06A4-E9C6-4229-82EE-BD2D4E0A7221}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MQACNet", "..\plugins\MQACNet\MQACNet.vcxproj", "{FE8D4BD3-46EC-40EA-D6D7-ECADD1F76BE3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2A0A06A4-E9C6-4229-82EE-BD2D4E0A7221} = {2A0A06A4-E9C6-4229-82EE-BD2D4E0A7221}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MQ2AutoAccept", "..\plugins\MQ2AutoAccept\MQ2AutoAccept.vcxproj", "{AA13000E-587F-9444-C2AE-D3CF07330C68}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2A0A06A4-E9C6-4229-82EE-BD2D4E0A7221} = {2A0A06A4-E9C6-4229-82EE-BD2D4E0A7221}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MQautomationcore", "..\plugins\MQautomationcore\MQautomationcore.vcxproj", "{857ACB0F-A9C6-C2F1-8997-EA3B74918316}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2A0A06A4-E9C6-4229-82EE-BD2D4E0A7221} = {2A0A06A4-E9C6-4229-82EE-BD2D4E0A7221}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MQRmlUiTest", "..\plugins\MQRmlUiTest\MQRmlUiTest.vcxproj", "{1C0954EC-28FC-8F56-BBC7-046B3308066E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2A0A06A4-E9C6-4229-82EE-BD2D4E0A7221} = {2A0A06A4-E9C6-4229-82EE-BD2D4E0A7221}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -731,6 +763,14 @@ Global
 		{857ACB0F-A9C6-C2F1-8997-EA3B74918316}.Release|Win32.Build.0 = Release|Win32
 		{857ACB0F-A9C6-C2F1-8997-EA3B74918316}.Release|x64.ActiveCfg = Release|x64
 		{857ACB0F-A9C6-C2F1-8997-EA3B74918316}.Release|x64.Build.0 = Release|x64
+		{1C0954EC-28FC-8F56-BBC7-046B3308066E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1C0954EC-28FC-8F56-BBC7-046B3308066E}.Debug|Win32.Build.0 = Debug|Win32
+		{1C0954EC-28FC-8F56-BBC7-046B3308066E}.Debug|x64.ActiveCfg = Debug|x64
+		{1C0954EC-28FC-8F56-BBC7-046B3308066E}.Debug|x64.Build.0 = Debug|x64
+		{1C0954EC-28FC-8F56-BBC7-046B3308066E}.Release|Win32.ActiveCfg = Release|Win32
+		{1C0954EC-28FC-8F56-BBC7-046B3308066E}.Release|Win32.Build.0 = Release|Win32
+		{1C0954EC-28FC-8F56-BBC7-046B3308066E}.Release|x64.ActiveCfg = Release|x64
+		{1C0954EC-28FC-8F56-BBC7-046B3308066E}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -799,6 +839,7 @@ Global
 		{FE8D4BD3-46EC-40EA-D6D7-ECADD1F76BE3} = {A648B03F-7642-4857-A62A-AFABC7CAB451}
 		{AA13000E-587F-9444-C2AE-D3CF07330C68} = {A648B03F-7642-4857-A62A-AFABC7CAB451}
 		{857ACB0F-A9C6-C2F1-8997-EA3B74918316} = {A648B03F-7642-4857-A62A-AFABC7CAB451}
+		{1C0954EC-28FC-8F56-BBC7-046B3308066E} = {A648B03F-7642-4857-A62A-AFABC7CAB451}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {330AC4A2-17BC-4784-AB3C-2B1DA71EB6A5}

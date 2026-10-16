@@ -1,0 +1,11 @@
+<rml>
+<head>
+  <title>MacroQuest RmlUi external document</title>
+  <link type="text/rcss" href="example.rcss" />
+</head>
+<body>
+  <h1>External RmlUi document</h1>
+  <p>This RML and its RCSS stylesheet were loaded from the MQ resource directory.</p>
+  <input type="text" value="External documents accept input too" />
+</body>
+</rml>

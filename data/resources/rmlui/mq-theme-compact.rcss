@@ -1,0 +1,35 @@
+/* Include after the default theme to reduce HUD density without changing markup. */
+body {
+  --mq-font-size-base: 15px;
+  --mq-font-size-title: 20px;
+  --mq-font-size-large: 17px;
+  --mq-font-size-small: 10px;
+  --mq-space-1: 2px;
+  --mq-space-2: 4px;
+  --mq-space-3: 7px;
+  --mq-space-4: 12px;
+  --mq-space-5: 16px;
+  --mq-card-padding: 7px;
+  --mq-window-padding: 12px;
+  --mq-window-padding-negative: -12px;
+  --mq-titlebar-padding-y: 7px;
+  --mq-control-height: 26px;
+  --mq-button-padding-x: 8px;
+  --mq-button-padding-y: 3px;
+  --mq-table-row-height: 27px;
+  --mq-stat-min-width: 112px;
+  --mq-icon-size: 28px;
+  --mq-icon-inset: 7px;
+  --mq-switch-width: 26px;
+  --mq-switch-height: 14px;
+  --mq-switch-thumb-size: 10px;
+  --mq-switch-thumb-offset: 2px;
+  --mq-switch-thumb-checked-left: 14px;
+  --mq-divider-height: 1px;
+  --mq-resize-icon-line-height: 18px;
+  --mq-resize-footer-height: 22px;
+  --mq-resize-handle-size: 20px;
+  --mq-radius-sm: 4px;
+  --mq-radius-md: 6px;
+  --mq-radius-lg: 7px;
+}

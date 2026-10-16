@@ -53,35 +53,35 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Static|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Static|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug-Static|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug-Static|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -168,7 +168,7 @@
     </ClCompile>
     <Link>
       <BaseAddress>0x03000000</BaseAddress>
-      <AdditionalDependencies>$(MQ2MainLibs);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(MQ2MainLibs);$(RmlUiLibs);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release-Static|Win32'">
@@ -190,7 +190,7 @@
     </ClCompile>
     <Link>
       <BaseAddress>0x030000000000</BaseAddress>
-      <AdditionalDependencies>$(MQ2MainLibs);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(MQ2MainLibs);$(RmlUiLibs);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release-Static|x64'">
@@ -212,7 +212,7 @@
     </ClCompile>
     <Link>
       <BaseAddress>0x03000000</BaseAddress>
-      <AdditionalDependencies>$(MQ2MainLibs);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(MQ2MainLibs);$(RmlUiLibs);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug-Static|Win32'">
@@ -234,7 +234,7 @@
     </ClCompile>
     <Link>
       <BaseAddress>0x030000000000</BaseAddress>
-      <AdditionalDependencies>$(MQ2MainLibs);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(MQ2MainLibs);$(RmlUiLibs);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug-Static|x64'">
@@ -435,6 +435,11 @@
     <ClCompile Include="GraphicsEngineDX11.cpp" />
     <ClCompile Include="GraphicsEngineDX9.cpp" />
     <ClCompile Include="GraphicsResources.cpp" />
+    <ClCompile Include="rmlui\RmlUiManager.cpp" />
+    <ClCompile Include="rmlui\RmlUiModel.cpp" />
+    <ClCompile Include="rmlui\RmlUiRendererDX9.cpp" />
+    <ClCompile Include="rmlui\RmlUiResizeEdge.cpp" />
+    <ClCompile Include="rmlui\RmlUiValue.cpp" />
     <ClCompile Include="ImGuiAlphaMask.cpp" />
     <ClCompile Include="ImGuiBackendDX11.cpp" />
     <ClCompile Include="ImGuiBackendDX9.cpp" />
@@ -478,6 +483,7 @@
     <ClCompile Include="MQAchievements.cpp" />
     <ClCompile Include="MQInventory.cpp" />
     <ClCompile Include="MQRenderDoc.cpp" />
+    <ClCompile Include="OverlayInput.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
@@ -504,6 +510,7 @@
     <ClInclude Include="..\..\include\mq\api\Main.h" />
     <ClInclude Include="..\..\include\mq\api\PluginAPI.h" />
     <ClInclude Include="..\..\include\mq\api\RenderDoc.h" />
+    <ClInclude Include="..\..\include\mq\api\RmlUi.h" />
     <ClInclude Include="..\..\include\mq\api\Spawns.h" />
     <ClInclude Include="..\..\include\mq\api\SpawnUtils.h" />
     <ClInclude Include="..\..\include\mq\api\Spells.h" />
@@ -552,6 +559,9 @@
     <ClInclude Include="emu\EmuExtensions.h" />
     <ClInclude Include="GraphicsEngine.h" />
     <ClInclude Include="GraphicsResources.h" />
+    <ClInclude Include="rmlui\RmlUiManager.h" />
+    <ClInclude Include="rmlui\RmlUiRendererDX9.h" />
+    <ClInclude Include="rmlui\RmlUiResizeEdge.h" />
     <ClInclude Include="ImGuiBackend.h" />
     <ClInclude Include="ImGuiManager.h" />
     <ClInclude Include="Logging.h" />
@@ -576,6 +586,7 @@
     <ClInclude Include="MQPluginHandler.h" />
     <ClInclude Include="MQRenderDoc.h" />
     <ClInclude Include="MQVersionInfo.h" />
+    <ClInclude Include="OverlayInput.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="MQPostOffice.h" />
     <ClInclude Include="resource.h" />

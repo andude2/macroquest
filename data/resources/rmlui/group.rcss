@@ -1,0 +1,75 @@
+/*
+ * Group HUD styling.
+ *
+ * `pointer-events: none` is applied to the document root by the core, so
+ * interactive content has to opt back in explicitly. A click-through HUD opts
+ * out of this entirely.
+ */
+
+body {
+	pointer-events: none;
+	font-size: 13px;
+	color: #e8e8e8;
+}
+
+.panel {
+	pointer-events: none;
+	position: absolute;
+	top: 80px;
+	left: 24px;
+	width: 260px;
+	padding: 8px;
+	background-color: rgba(0, 0, 0, 0.55);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	border-radius: 4px;
+}
+
+.header {
+	display: flex;
+	justify-content: space-between;
+	padding-bottom: 4px;
+	margin-bottom: 4px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.title {
+	font-weight: bold;
+}
+
+.count {
+	color: #9a9a9a;
+}
+
+.rows {
+	display: block;
+}
+
+.row {
+	display: flex;
+	justify-content: space-between;
+	padding: 1px 0;
+}
+
+.name {
+	color: #f0f0f0;
+}
+
+.hp {
+	color: #7fd67f;
+}
+
+.role {
+	color: #8ab4d8;
+}
+
+.debuffs {
+	display: block;
+	padding-top: 4px;
+	margin-top: 4px;
+	border-top: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.debuff {
+	color: #d88a8a;
+	padding-right: 4px;
+}

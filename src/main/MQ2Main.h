@@ -89,6 +89,7 @@ void ShutdownDisplayHook();
 void InitializeOverlayService();
 void ShutdownOverlayService();
 void RemoveOverlayCallbacksForPlugin(MQPluginHandle owner);
+void RemoveRmlDocumentsForPlugin(MQPluginHandle owner);
 
 void InitializeMQ2Pulse();
 void ShutdownMQ2Pulse();

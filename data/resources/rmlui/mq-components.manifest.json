@@ -1,0 +1,190 @@
+{
+  "schemaVersion": 1,
+  "componentSet": "mq-components",
+  "componentVersion": "0.3.0",
+  "stylesheet": "mq://rmlui/mq-components.rcss",
+  "eventModel": "Components use native RmlUi events; applications own listeners and model updates.",
+  "modelBindingContract": "The stylesheet primitives do not create model fields. Every expression referenced by consumer data-* markup must be declared before parsing; the bindings below state the expected type when that binding is used.",
+  "sizingContract": "Lengths are RCSS CSS pixels before any client-specific scaling. A content-driven minimum means the component declares no min-width or min-height.",
+  "eventPayloadContract": "Events are MQRmlUiEvent snapshots. Delegated controls should put data-mq-value on the logical action and read action_id/action_value; form controls expose their current string in value.",
+  "components": [
+    {
+      "name": "layout",
+      "status": "supported",
+      "classes": ["mq-stack", "mq-row", "mq-wrap", "mq-grow", "mq-gap-xs", "mq-gap-sm", "mq-gap-md", "mq-hidden", "mq-muted"],
+      "requiredModelFields": [],
+      "minimumSize": { "width": "content-driven", "height": "content-driven" },
+      "states": [],
+      "events": [],
+      "keyboard": "Not interactive; focus order remains the DOM order of interactive descendants."
+    },
+    {
+      "name": "card",
+      "status": "supported",
+      "classes": ["mq-card", "mq-card-title", "mq-card-label"],
+      "requiredModelFields": [],
+      "minimumSize": { "width": "content-driven", "height": "content-driven" },
+      "states": [],
+      "events": [],
+      "keyboard": "Not interactive."
+    },
+    {
+      "name": "stat-card",
+      "status": "supported",
+      "classes": ["mq-stat-card", "mq-stat-icon", "mq-stat-value", "mq-stat-label"],
+      "requiredModelFields": [],
+      "minimumSize": { "width": "--mq-stat-min-width", "height": "content-driven" },
+      "states": [],
+      "events": [],
+      "keyboard": "Not interactive; provide readable text when the icon conveys information."
+    },
+    {
+      "name": "button",
+      "status": "supported",
+      "markup": "button",
+      "classes": ["mq-button", "primary", "danger", "ghost"],
+      "requiredModelFields": [],
+      "minimumSize": { "width": "content-driven", "height": "content-driven" },
+      "states": ["hover", "focus-visible", "active", "disabled"],
+      "events": [{ "type": "click", "payload": ["target_id", "action_id", "action_value"] }],
+      "keyboard": "Native button Tab focus and Enter/Space activation. Disabled buttons are not actionable. Add data-mq-value when the listener needs a stable action value."
+    },
+    {
+      "name": "icon-button",
+      "status": "supported",
+      "markup": "button",
+      "classes": ["mq-icon-button"],
+      "requiredModelFields": [],
+      "minimumSize": { "width": "--mq-control-height", "height": "--mq-control-height" },
+      "states": ["hover", "focus-visible", "active", "disabled"],
+      "events": [{ "type": "click", "payload": ["target_id", "action_id", "action_value"] }],
+      "keyboard": "Native button Tab focus and Enter/Space activation. Supply an accessible readable name adjacent to the icon; a glyph alone is not a label."
+    },
+    {
+      "name": "segmented-control",
+      "status": "supported",
+      "parts": ["mq-segmented", "mq-segment"],
+      "requiredModelFields": [],
+      "modelBindings": [{ "attribute": "data-class-active", "type": "boolean expression", "when": "Used to reflect the selected segment." }],
+      "minimumSize": { "width": "content-driven", "height": "content-driven" },
+      "states": ["hover", "focus-visible", "active-class"],
+      "events": [{ "type": "click", "payload": ["action_id", "action_value"] }],
+      "keyboard": "Each segment must be a native button and follows DOM Tab order with Enter/Space activation. Arrow-key navigation is not provided; the application updates the selected class/model after click."
+    },
+    {
+      "name": "switch",
+      "status": "supported",
+      "markup": "button",
+      "parts": ["mq-switch", "mq-switch-thumb"],
+      "requiredModelFields": [],
+      "modelBindings": [{ "attribute": "data-class-checked", "type": "boolean", "when": "Used to reflect the checked state." }],
+      "minimumSize": { "width": "--mq-switch-width", "height": "--mq-switch-height" },
+      "states": ["focus-visible", "checked-class"],
+      "events": [{ "type": "click", "payload": ["target_id"] }],
+      "keyboard": "Native button Tab focus and Enter/Space activation. Application owns checked state and must provide a readable associated label."
+    },
+    {
+      "name": "badge",
+      "status": "supported",
+      "classes": ["mq-badge", "info", "success", "warning", "danger"],
+      "requiredModelFields": [],
+      "minimumSize": { "width": "content-driven", "height": "content-driven" },
+      "states": [],
+      "events": [],
+      "keyboard": "Not interactive; communicate status with text or another non-color cue when color alone would be ambiguous."
+    },
+    {
+      "name": "text-input",
+      "status": "supported",
+      "markup": "input[type=text]",
+      "classes": ["mq-input"],
+      "requiredModelFields": [],
+      "modelBindings": [{ "attribute": "data-value", "type": "string" }],
+      "minimumSize": { "width": "content-driven", "height": "--mq-control-height" },
+      "states": ["hover", "focus"],
+      "events": [
+        { "type": "textinput", "payload": ["target_id", "value"] },
+        { "type": "change", "payload": ["target_id", "value"] }
+      ],
+      "keyboard": "Native RmlUi text editing and Tab behavior. Associate a visible label and preserve normal text-editing keys."
+    },
+    {
+      "name": "progress",
+      "status": "supported",
+      "parts": ["mq-progress", "mq-progress-fill"],
+      "requiredModelFields": [],
+      "modelBindings": [{ "attribute": "data-style-width", "type": "CSS length or percentage string", "constraint": "Application clamps percentage values to 0%-100%." }],
+      "minimumSize": { "width": "container-dependent", "height": "--mq-space-2" },
+      "states": [],
+      "events": [],
+      "keyboard": "Not interactive. Expose the numeric value in readable text when the value matters."
+    },
+    {
+      "name": "toolbar",
+      "status": "supported",
+      "classes": ["mq-toolbar"],
+      "requiredModelFields": [],
+      "minimumSize": { "width": "content-driven", "height": "content-driven" },
+      "states": [],
+      "events": [],
+      "keyboard": "Not interactive itself; focus order follows interactive descendants in DOM order."
+    },
+    {
+      "name": "table",
+      "status": "supported",
+      "parts": ["mq-table", "mq-table-header", "mq-table-row", "mq-cell"],
+      "requiredModelFields": [],
+      "modelBindings": [{ "attribute": "data-for", "type": "array of records", "when": "Used to render rows; record shape is application-defined." }],
+      "minimumSize": { "width": "container-dependent", "height": "content-driven" },
+      "states": ["hover", "selected-class"],
+      "events": [{ "type": "click", "payload": ["action_id", "action_value"] }],
+      "keyboard": "Rows are presentational and not keyboard-activated by default. Put an explicit native button or other keyboard-operable control in a row when selection or actions are available."
+    },
+    {
+      "name": "notice",
+      "status": "supported",
+      "classes": ["mq-notice", "success", "warning", "danger"],
+      "requiredModelFields": [],
+      "minimumSize": { "width": "content-driven", "height": "content-driven" },
+      "states": [],
+      "events": [],
+      "keyboard": "Not interactive; include text and do not rely on color alone to communicate severity."
+    },
+    {
+      "name": "tooltip",
+      "status": "experimental",
+      "parts": ["mq-tooltip-host", "mq-tooltip"],
+      "requiredModelFields": [],
+      "minimumSize": { "width": "content-driven", "height": "content-driven" },
+      "states": ["hover-visible"],
+      "events": [],
+      "keyboard": "CSS hover visibility only. No focus trigger, delay, dismissal, or accessible-description behavior is guaranteed."
+    },
+    {
+      "name": "empty-state",
+      "status": "supported",
+      "classes": ["mq-empty-state"],
+      "requiredModelFields": [],
+      "minimumSize": { "width": "content-driven", "height": "content-driven" },
+      "states": [],
+      "events": [],
+      "keyboard": "Not interactive; interactive recovery actions should use a separately labeled native button."
+    }
+  ],
+  "planned": [
+    "checkbox",
+    "radio-group",
+    "slider",
+    "numeric-input",
+    "select",
+    "validation-message",
+    "tabs",
+    "popover",
+    "context-menu",
+    "modal",
+    "toast",
+    "loading-state",
+    "error-state",
+    "EQ-icon"
+  ]
+}

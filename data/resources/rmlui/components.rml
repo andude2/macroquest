@@ -1,0 +1,93 @@
+<rml>
+<head>
+  <title>MacroQuest Components</title>
+  <link type="text/template" href="mq://rmlui/mq-window.rml" />
+  <link type="text/rcss" href="mq://rmlui/mq-components.rcss" />
+  <link type="text/rcss" href="components.rcss" />
+</head>
+<body template="mq-window">
+  <div class="component-gallery" data-model="components">
+    <div class="gallery-wide mq-row mq-wrap mq-gap-sm">
+      <div class="mq-stat-card">
+        <div class="mq-stat-icon">★</div>
+        <div><div class="mq-stat-value">{{ count }}</div><div class="mq-stat-label">Results</div></div>
+      </div>
+      <div class="mq-stat-card">
+        <div class="mq-stat-icon">✓</div>
+        <div><div class="mq-stat-value">{{ status }}</div><div class="mq-stat-label">Status</div></div>
+      </div>
+    </div>
+
+    <div class="gallery-wide mq-toolbar">
+      <div class="mq-toolbar-main">
+        <input id="search-input" class="mq-input" type="text" data-value="query" value="" />
+        <div id="scope" class="mq-segmented">
+          <button class="mq-segment" data-class-active="scope == 'local'" data-mq-value="local">Local</button>
+          <button class="mq-segment" data-class-active="scope == 'all'" data-mq-value="all">All</button>
+        </div>
+      </div>
+      <div class="mq-toolbar-actions">
+        <span>Alerts</span>
+        <button id="alerts" class="mq-switch" data-class-checked="alerts">
+          <span class="mq-switch-thumb"></span>
+        </button>
+        <button id="refresh" class="mq-button primary">Refresh</button>
+      </div>
+    </div>
+
+    <div class="gallery-half mq-card mq-stack mq-gap-sm">
+      <div class="mq-card-title">Buttons and focus states</div>
+      <div class="mq-row mq-wrap mq-gap-sm">
+        <button class="mq-button">Default</button>
+        <button class="mq-button primary">Primary</button>
+        <button class="mq-button danger">Danger</button>
+        <button class="mq-button ghost">Ghost</button>
+        <button class="mq-button" disabled="disabled">Disabled</button>
+        <button class="mq-icon-button">+</button><span>Add item</span>
+        <span class="mq-muted">Tab through controls to see focus; activate with Enter or Space.</span>
+      </div>
+    </div>
+
+    <div class="gallery-half mq-card mq-stack mq-gap-sm">
+      <div class="mq-card-title">Badges, notices, and tooltip</div>
+      <div class="mq-row mq-wrap mq-gap-sm">
+        <span class="mq-badge info">Info</span>
+        <span class="mq-badge success">Success</span>
+        <span class="mq-badge warning">Warning</span>
+        <span class="mq-badge danger">Danger</span>
+        <span class="mq-tooltip-host">Hover for tooltip<span class="mq-tooltip">Hover-only experimental tooltip</span></span>
+      </div>
+      <div class="mq-notice">Informational notice</div>
+      <div class="mq-notice success">Success notice</div>
+      <div class="mq-notice warning">Warning notice</div>
+      <div class="mq-notice danger">Danger notice</div>
+    </div>
+
+    <div class="gallery-wide mq-notice success" data-if="alerts">Alerts enabled. Interactive state is model-driven.</div>
+
+    <div class="gallery-wide mq-card mq-stack mq-gap-sm">
+      <div class="mq-row"><div class="mq-card-title mq-grow">Component table</div><span class="mq-badge info">{{ row_count }} rows</span></div>
+      <div class="mq-progress"><div class="mq-progress-fill" data-style-width="progress"></div></div>
+        <div id="component-table" class="mq-table">
+        <div class="mq-table-header">
+          <div class="mq-cell col-name">Name</div><div class="mq-cell col-state">State</div><div class="mq-cell col-action">Action</div>
+        </div>
+        <div id="rows">
+          <div class="mq-table-row" data-for="row : rows" data-class-selected="row.selected" data-attr-data-mq-value="row.id">
+            <div class="mq-cell col-name">{{ row.name }}</div>
+            <div class="mq-cell col-state"><span class="mq-badge" data-class-success="row.ok">{{ row.state }}</span></div>
+            <div class="mq-cell col-action">›</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gallery-half mq-card mq-stack mq-gap-sm">
+      <div class="mq-card-title">Empty state and separators</div>
+      <div class="mq-empty-state">Nothing to display. Try Refresh to update the sample status.</div>
+      <div class="mq-divider"></div>
+      <div class="mq-muted">Layout helpers, cards, statistic cards, form input, progress, and table are demonstrated above.</div>
+    </div>
+  </div>
+</body>
+</rml>

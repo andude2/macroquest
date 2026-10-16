@@ -20,6 +20,7 @@
 #include "LuaEvent.h"
 #include "LuaActor.h"
 #include "LuaImGui.h"
+#include "LuaRmlUi.h"
 #include "LuaModuleRegistry.h"
 #include "bindings/lua_Bindings.h"
 #include "bindings/lua_MQBindings.h"
@@ -136,6 +137,11 @@ static void RegisterBuiltInModules()
 	register_builtin("actors", [](const sol::this_state s)
 	{
 		return sol::make_object(s, LuaActors::RegisterLua(s));
+	});
+
+	register_builtin("mq.rmlui", [](const sol::this_state s)
+	{
+		return sol::make_object(s, LuaRmlUi::RegisterLua(s));
 	});
 
 	register_builtin("ImGui", [](const sol::this_state s)
@@ -2014,6 +2020,7 @@ PLUGIN_API void OnPulse()
 	}
 
 	// Process messages after any threads have ended or started (the order likely won't matter since cleanup is checked)
+	LuaRmlUi::Pulse();
 	LuaActors::Process();
 
 	if (s_infoGC.count() > 0)

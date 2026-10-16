@@ -1,0 +1,4 @@
+RmlUi 6.3 is available as the RmlUi::RmlUi CMake target.
+
+    find_package(RmlUi CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE RmlUi::RmlUi)

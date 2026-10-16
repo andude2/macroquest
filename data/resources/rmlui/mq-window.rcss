@@ -1,0 +1,95 @@
+/* Standard low-cost direct RmlUi window for MacroQuest Lua HUDs. */
+
+.mq-viewport {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  font-family: "Segoe UI";
+  font-size: var(--mq-font-size-base);
+  font-weight: 600;
+  color: var(--mq-color-text-strong);
+}
+
+.mq-window {
+  position: absolute;
+  left: 40px;
+  top: 60px;
+  width: 380px;
+  height: 620px;
+  min-width: 300px;
+  min-height: 220px;
+  padding: var(--mq-window-padding);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  clip: always;
+  pointer-events: auto;
+  background-color: var(--mq-color-window);
+  border: var(--mq-border-width) solid var(--mq-color-window-border);
+}
+
+.mq-window-titlebar {
+  display: block;
+  flex: 0 0 auto;
+  margin: var(--mq-window-padding-negative) var(--mq-window-padding-negative) var(--mq-space-3) var(--mq-window-padding-negative);
+  padding: var(--mq-titlebar-padding-y) var(--mq-window-padding);
+  background-color: var(--mq-color-titlebar);
+  cursor: move;
+}
+
+.mq-window-title {
+  display: block;
+  margin: 0;
+  color: var(--mq-color-accent-border);
+  font-size: var(--mq-font-size-title);
+  pointer-events: none;
+}
+
+.mq-window-content {
+  display: block;
+  flex: 1 1 auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  clip: always;
+}
+
+.mq-window-resize-footer {
+  display: flex;
+  flex: 0 0 var(--mq-resize-footer-height);
+  justify-content: flex-end;
+  align-items: flex-end;
+  width: 100%;
+  height: var(--mq-resize-footer-height);
+  pointer-events: auto;
+}
+
+.mq-window-resize-handle {
+  display: block;
+  width: var(--mq-resize-handle-size);
+  height: var(--mq-resize-handle-size);
+  pointer-events: auto;
+}
+
+.mq-window-resize-icon {
+  display: block;
+  float: right;
+  width: var(--mq-resize-handle-size);
+  height: var(--mq-resize-handle-size);
+  line-height: var(--mq-resize-icon-line-height);
+  text-align: center;
+  pointer-events: none;
+  color: var(--mq-color-text-strong);
+  background-color: var(--mq-color-accent-soft);
+  border: var(--mq-border-width) solid var(--mq-color-accent-border);
+  font-size: var(--mq-font-size-large);
+}
+
+.mq-window.mq-locked .mq-window-titlebar {
+  cursor: default;
+  pointer-events: none;
+}
+
+.mq-window.mq-locked .mq-window-resize-footer { display: none; }

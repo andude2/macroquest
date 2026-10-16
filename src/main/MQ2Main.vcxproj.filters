@@ -389,6 +389,21 @@
     <ClCompile Include="GraphicsEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="rmlui\RmlUiManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rmlui\RmlUiModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rmlui\RmlUiValue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rmlui\RmlUiRendererDX9.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rmlui\RmlUiResizeEdge.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="MQPostOffice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -417,6 +432,9 @@
       <Filter>Source Files\emu</Filter>
     </ClCompile>
     <ClCompile Include="MQRenderDoc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OverlayInput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ImGuiAlphaMask.cpp">
@@ -526,6 +544,9 @@
     <ClInclude Include="MQVersionInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="OverlayInput.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="MQ2SpellSearch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -616,6 +637,18 @@
     <ClInclude Include="GraphicsEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="rmlui\RmlUiManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rmlui\RmlUiModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rmlui\RmlUiRendererDX9.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rmlui\RmlUiResizeEdge.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="MQPostOffice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -632,6 +665,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\mq\api\Textures.h">
+      <Filter>Header Files\mq\api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\mq\api\RmlUi.h">
       <Filter>Header Files\mq\api</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\extras\wil\Constants.h">

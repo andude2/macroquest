@@ -25,6 +25,7 @@
 #include "MQPluginHandler.h"
 #include "ImGuiManager.h"
 #include "GraphicsResources.h"
+#include "rmlui/RmlUiManager.h"
 
 #include "mq/base/Logging.h"
 
@@ -849,6 +850,7 @@ void MacroQuest::Initialize()
 
 	GraphicsResources_Initialize();
 	ImGuiManager_Initialize();
+	rmlui::Initialize();
 
 	// this needs to be done before anything that would need to add a callback to string message parsing
 	InitializeStringDB();
@@ -894,6 +896,7 @@ void MacroQuest::Shutdown()
 	ShutdownPlugins();
 	ShutdownFailedPlugins();
 	ShutdownInternalModules();
+	rmlui::Shutdown();
 	ImGuiManager_Shutdown();
 	GraphicsResources_Shutdown();
 	ShutdownStringDB();

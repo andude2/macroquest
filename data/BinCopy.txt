@@ -1,3 +1,4 @@
 config/MacroQuest_default.ini
 macros/*.mac
 resources/*
+resources/rmlui/*

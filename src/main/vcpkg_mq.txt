@@ -6,3 +6,4 @@ detours
 protobuf
 sqlite3
 argon2
+rmlui

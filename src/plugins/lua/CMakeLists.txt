@@ -26,6 +26,7 @@ set(MQ2Lua_HEADERS
     "LuaCoroutine.h"
     "LuaImGui.h"
     "LuaModuleRegistry.h"
+    "LuaRmlUi.h"
     "LuaThread.h"
     "LuaInterface.h"
     "pch.h"
@@ -65,6 +66,7 @@ set(MQ2Lua_SOURCES
     "LuaEvent.cpp"
     "LuaImGui.cpp"
     "LuaModuleRegistry.cpp"
+    "LuaRmlUi.cpp"
     "LuaThread.cpp"
     "MQ2Lua.cpp"
 )

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Group HUD.
+
+  Exercises the dynamic data model: `group.members` is an array of records, and
+  data-for walks it. Adding or removing a member updates the list in place; the
+  document is not reloaded or rebuilt.
+
+  The model is declared on rmlui.open before this document parses, which is what
+  lets the first update bind to it without a reload.
+-->
+<rml>
+<head>
+  <title>Group HUD</title>
+  <link type="text/rcss" href="group.rcss" />
+</head>
+<body data-model="group">
+  <div id="panel" class="panel">
+    <div class="header">
+      <span class="title">{{ group.name }}</span>
+      <span class="count">{{ group.member_count }} / {{ group.max }}</span>
+    </div>
+
+    <!-- Empty-to-populated works: with no members this renders nothing, and the
+         rows appear as soon as the array is set. -->
+    <div class="rows" data-for="member in group.members">
+      <div class="row">
+        <span class="name">{{ member.name }}</span>
+        <span class="hp">{{ member.hp }}%</span>
+        <span class="role">{{ member.role }}</span>
+      </div>
+    </div>
+
+    <!-- Records nest and can be indexed, so a per-member debuff list resolves
+         through `members[0]` and then into that member's own array. -->
+    <div class="debuffs" data-for="debuff in group.members[0].debuffs">
+      <span class="debuff">{{ debuff.name }} ({{ debuff.seconds }}s)</span>
+    </div>
+  </div>
+</body>
+</rml>

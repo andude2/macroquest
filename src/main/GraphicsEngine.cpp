@@ -18,6 +18,8 @@
 #include "ImGuiManager.h"
 #include "MQ2DeveloperTools.h"    // For DeveloperTools_WindowInspector_HandleClick
 #include "Logging.h"
+#include "OverlayInput.h"
+#include "rmlui/RmlUiManager.h"
 
 #include "mq/api/RenderDoc.h"
 #include "imgui/imgui_internal.h"
@@ -99,10 +101,11 @@ public:
 DETOUR_TRAMPOLINE_DEF(void, ProcessMouseEvents_Trampoline, ())
 void ProcessMouseEvents_Detour()
 {
-	if (gbRenderImGui && ImGui::GetCurrentContext() != nullptr && g_pDIMouse != nullptr)
+	const bool hasImGuiInput = gbRenderImGui && ImGui::GetCurrentContext() != nullptr;
+	if ((hasImGuiInput || OverlayWantsMouseInput()) && g_pDIMouse != nullptr)
 	{
-		ImGuiIO& io = ImGui::GetIO();
-		bool consumeMouse = io.WantCaptureMouse;
+		bool consumeMouse = OverlayWantsMouseInput();
+		ImGuiIO* io = hasImGuiInput ? &ImGui::GetIO() : nullptr;
 
 		// Read mouse state from direct input
 		DIDEVICEOBJECTDATA data[128];
@@ -123,14 +126,15 @@ void ProcessMouseEvents_Detour()
 				case DIMOFS_BUTTON2:
 				case DIMOFS_BUTTON3:
 				case DIMOFS_BUTTON4:
-					if (ImGuiOverlay_HandleMouseEvent(d.dwOfs - DIMOFS_BUTTON0, (d.dwData & 0x80) != 0))
+					if (io && ImGuiOverlay_HandleMouseEvent(d.dwOfs - DIMOFS_BUTTON0, (d.dwData & 0x80) != 0))
 						consumeMouse = true;
 					break;
 
 				default:
 					if (d.dwOfs == DIMOFS_Z)
 					{
-						io.MouseWheel += static_cast<int>(d.dwData) / (float)WHEEL_DELTA;
+						if (io)
+							io->MouseWheel += static_cast<int>(d.dwData) / (float)WHEEL_DELTA;
 					}
 					break;
 				}
@@ -176,15 +180,8 @@ void ProcessMouseEvents_Detour()
 DETOUR_TRAMPOLINE_DEF(void, HandleMouseWheel_Trampoline, (int))
 void HandleMouseWheel_Detour(int offset)
 {
-	if (gbRenderImGui && ImGui::GetCurrentContext() != nullptr)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-
-		if (io.WantCaptureMouse)
-		{
-			return;
-		}
-	}
+	if (OverlayWantsMouseInput())
+		return;
 
 	if (!s_flushNextMouse)
 	{
@@ -198,18 +195,13 @@ void HandleMouseWheel_Detour(int offset)
 DETOUR_TRAMPOLINE_DEF(uint32_t, ProcessKeyboardEvents_Trampoline, ())
 uint32_t ProcessKeyboardEvents_Detour()
 {
-	if (gbRenderImGui && ImGui::GetCurrentContext() != nullptr)
+	if (OverlayConsumeKeyboardInput())
 	{
-		ImGuiIO& io = ImGui::GetIO();
-
-		if (io.WantTextInput || (io.WantCaptureKeyboard && !io.WantCaptureMouse))
-		{
-			// FlushDxKeyboard will consume any keyboard data that is currently
-			// buffered by direct input so that the keyboard inputs don't get
-			// picked up by EQ too.
-			eqlib::FlushDxKeyboard();
-			return 0;
-		}
+		// FlushDxKeyboard will consume any keyboard data that is currently
+		// buffered by direct input so that the keyboard inputs don't get
+		// picked up by EQ too.
+		eqlib::FlushDxKeyboard();
+		return 0;
 	}
 
 	return ProcessKeyboardEvents_Trampoline();
@@ -285,13 +277,7 @@ LRESULT WINAPI WndProc_Detour(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 bool OverlayWndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	if (!gbRenderImGui)
-		return false;
-
-	if (ImGuiManager_HandleWndProc(hWnd, msg, wParam, lParam))
-		return true;
-
-	return false;
+	return OverlayWndProcDispatch(hWnd, msg, wParam, lParam);
 }
 
 // Returns true if this event should be "erased" from eq while not within the imgui
@@ -438,6 +424,8 @@ void MQGraphicsEngine::InvalidateDeviceObjects()
 	gbDeviceAcquired = false;
 
 	InvalidateDeviceObjects_Internal();
+	rmlui::InvalidateDeviceObjects();
+	OverlayClearCapture();
 
 	for (const auto& pCallbacks : MQGraphicsEngine::s_renderCallbacks)
 	{
@@ -456,6 +444,7 @@ void MQGraphicsEngine::CreateDeviceObjects()
 	gbDeviceAcquired = true;
 
 	CreateDeviceObjects_Internal();
+	rmlui::CreateDeviceObjects();
 
 	for (const auto& pCallbacks : s_renderCallbacks)
 	{
@@ -491,16 +480,18 @@ void MQGraphicsEngine::UpdateScene_Internal()
 
 void MQGraphicsEngine::PostUpdateScene()
 {
-	if (m_deviceAcquired && m_imguiReady && !m_needResetOverlay)
-	{
-		if (gGameState != GAMESTATE_LOGGINGIN
-			&& gbRenderImGui
-			&& !s_renderedImGuiThisFrame)
-		{
-			ImGui_DrawFrame();
+	if (!m_deviceAcquired || m_needResetOverlay || gGameState == GAMESTATE_LOGGINGIN)
+		return;
 
-			s_renderedImGuiThisFrame = true;
-		}
+	// RmlUi renders directly into the active overlay target before ImGui. It is
+	// intentionally independent of gbRenderImGui so direct HUD documents do not
+	// require ImGui to be visible.
+	rmlui::Render();
+
+	if (m_imguiReady && gbRenderImGui && !s_renderedImGuiThisFrame)
+	{
+		ImGui_DrawFrame();
+		s_renderedImGuiThisFrame = true;
 	}
 }
 

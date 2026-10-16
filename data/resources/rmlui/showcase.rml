@@ -1,0 +1,154 @@
+<rml>
+<head>
+  <title>RmlUi Showcase</title>
+  <link type="text/rcss" href="lua://rmlui_showcase/mq-window.rcss" />
+  <link type="text/rcss" href="lua://rmlui_showcase/mq-components.rcss" />
+  <link type="text/rcss" href="lua://rmlui_showcase/showcase.rcss" />
+</head>
+<body class="mq-viewport">
+  <div id="window" class="mq-window showcase-window">
+    <handle id="window-handle" class="mq-window-titlebar" move_target="#parent">
+      <h1 id="window-title" class="mq-window-title">RmlUi Showcase</h1>
+      <span class="title-chip">RCSS + RML + Lua</span>
+    </handle>
+
+    <div id="window-content" class="mq-window-content" data-model="showcase">
+      <div class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow">MACROQUEST UI LAB</div>
+          <h2>One document. A complete UI system.</h2>
+          <p>Transitions, keyframes, transforms, responsive layout, controls, templates, data binding and live Lua updates.</p>
+          <div class="mq-row mq-gap-sm">
+            <button id="replay" class="mq-button primary">Replay animations</button>
+            <button id="pause" class="mq-button" data-class-active="paused">{{ pause_label }}</button>
+            <span class="mq-badge success">{{ status }}</span>
+          </div>
+        </div>
+        <div class="hero-orbit" data-class-paused="paused">
+          <div class="orbit-ring"></div><div class="orbit-dot"></div>
+          <div class="hero-logo">R</div>
+        </div>
+      </div>
+
+      <div id="tabs" class="showcase-tabs">
+        <button class="showcase-tab" data-class-active="tab == 'motion'" data-mq-value="motion">Motion</button>
+        <button class="showcase-tab" data-class-active="tab == 'style'" data-mq-value="style">Style</button>
+        <button class="showcase-tab" data-class-active="tab == 'layout'" data-mq-value="layout">Layout</button>
+        <button class="showcase-tab" data-class-active="tab == 'controls'" data-mq-value="controls">Controls</button>
+        <button class="showcase-tab" data-class-active="tab == 'data'" data-mq-value="data">Data + API</button>
+      </div>
+
+      <div class="page" data-if="tab == 'motion'">
+        <div class="section-head"><div><h3>Animation studio</h3><p>Native RCSS animations compose without per-frame Lua rendering.</p></div><span class="mq-badge info">hover cards too</span></div>
+        <div id="motion-stage" class="motion-stage" data-class-paused="paused" data-class-replay="replay">
+          <div class="motion-demo"><div class="stage"><div class="shape tween"></div></div><b>Transition</b><small>hover: translate + color</small></div>
+          <div class="motion-demo"><div class="stage"><div class="shape pulse"></div></div><b>Keyframes</b><small>scale + opacity</small></div>
+          <div class="motion-demo"><div class="stage"><div class="shape spin"></div></div><b>Transform</b><small>rotate + border radius</small></div>
+          <div class="motion-demo"><div class="stage"><div class="shape bounce"></div></div><b>Easing</b><small>ease-in-out alternate</small></div>
+          <div class="motion-demo"><div class="stage"><div class="shape color-cycle"></div></div><b>Color</b><small>multi-stop keyframes</small></div>
+          <div class="motion-demo"><div class="stage stagger"><i></i><i></i><i></i><i></i><i></i></div><b>Stagger</b><small>animation delays</small></div>
+          <div class="motion-demo"><div class="stage"><div class="shape flip"></div></div><b>3D transform</b><small>perspective + rotateY</small></div>
+          <div class="motion-demo"><div class="stage"><div class="shape combo"></div></div><b>Composition</b><small>translate + rotate + scale</small></div>
+        </div>
+        <div class="mq-card easing-card" data-class-paused="paused">
+          <div class="mq-row"><div class="mq-card-title mq-grow">All 33 native easing modes</div><span class="mq-muted">in · out · in-out</span></div>
+          <div class="easing-head"><span>Family</span><i>in</i><i>out</i><i>in-out</i></div>
+          <div class="easing-row linear"><span>Linear</span><i class="ein"><b></b></i><i class="eout"><b></b></i><i class="einout"><b></b></i></div>
+          <div class="easing-row quadratic"><span>Quadratic</span><i class="ein"><b></b></i><i class="eout"><b></b></i><i class="einout"><b></b></i></div>
+          <div class="easing-row cubic"><span>Cubic</span><i class="ein"><b></b></i><i class="eout"><b></b></i><i class="einout"><b></b></i></div>
+          <div class="easing-row quartic"><span>Quartic</span><i class="ein"><b></b></i><i class="eout"><b></b></i><i class="einout"><b></b></i></div>
+          <div class="easing-row quintic"><span>Quintic</span><i class="ein"><b></b></i><i class="eout"><b></b></i><i class="einout"><b></b></i></div>
+          <div class="easing-row sine"><span>Sine</span><i class="ein"><b></b></i><i class="eout"><b></b></i><i class="einout"><b></b></i></div>
+          <div class="easing-row circular"><span>Circular</span><i class="ein"><b></b></i><i class="eout"><b></b></i><i class="einout"><b></b></i></div>
+          <div class="easing-row exponential"><span>Exponential</span><i class="ein"><b></b></i><i class="eout"><b></b></i><i class="einout"><b></b></i></div>
+          <div class="easing-row back"><span>Back</span><i class="ein"><b></b></i><i class="eout"><b></b></i><i class="einout"><b></b></i></div>
+          <div class="easing-row bounce-family"><span>Bounce</span><i class="ein"><b></b></i><i class="eout"><b></b></i><i class="einout"><b></b></i></div>
+          <div class="easing-row elastic"><span>Elastic</span><i class="ein"><b></b></i><i class="eout"><b></b></i><i class="einout"><b></b></i></div>
+        </div>
+        <div class="mq-card timeline-card">
+          <div class="mq-row"><b class="mq-grow">Lua-driven timeline</b><span>{{ progress }}%</span></div>
+          <div class="timeline"><div class="timeline-fill" data-style-width="progress_css"></div><div class="timeline-marker m1"></div><div class="timeline-marker m2"></div><div class="timeline-marker m3"></div></div>
+          <div class="mq-row mq-gap-sm"><button id="timeline-toggle" class="mq-button primary">{{ timeline_label }}</button><button id="timeline-reset" class="mq-button">Reset</button><span class="mq-muted">RCSS handles presentation; Lua owns semantic state.</span></div>
+        </div>
+      </div>
+
+      <div class="page" data-if="tab == 'style'">
+        <div class="section-head"><div><h3>Visual language</h3><p>Cascade, selectors, pseudo-classes, decorators, clipping and typography.</p></div></div>
+        <div class="gallery">
+          <div class="style-card gradient-a"><span>Linear gradient</span><b>Ocean glass</b></div>
+          <div class="style-card gradient-b"><span>Multiple decorators</span><b>Layered light</b></div>
+          <div class="style-card borders"><span>Borders + radii</span><b>Panel chrome</b></div>
+          <div class="style-card alpha"><span>RGBA colors</span><b>Transparency</b></div>
+        </div>
+        <div class="two-col">
+          <div class="mq-card type-specimen"><div class="mq-card-label">Typography</div><h1>Display heading</h1><h4>Weighted hierarchy and spacing</h4><p>RmlUi supports font faces, weights, sizes, line height, letter spacing, text transforms, alignment, decoration, shadows and overflow.</p><div><span class="tag">UPPERCASE</span><span class="underlined">underlined link</span></div></div>
+          <div class="mq-card"><div class="mq-card-label">Selectors and states</div><div class="state-grid"><button class="state-button">Hover me</button><button class="state-button" disabled>Disabled</button><input class="mq-input" value="Focus and select" /><div class="selector-demo"><span>nested selector</span></div></div></div>
+        </div>
+        <div class="mq-card overflow-demo"><div class="mq-card-label">Clipping, overflow and z-index</div><div class="clip-frame"><div class="clip-orb one"></div><div class="clip-orb two"></div><div class="clip-label">overflow: hidden</div></div></div>
+      </div>
+
+      <div class="page" data-if="tab == 'layout'">
+        <div class="section-head"><div><h3>Layout engine</h3><p>Block, inline, flexbox, absolute positioning, sizing, margins and scrolling.</p></div></div>
+        <div class="layout-grid">
+          <div class="mq-card"><div class="mq-card-label">Flex direction + gap</div><div class="flex-demo"><i>1</i><i>2</i><i class="grow">flex: 1</i><i>4</i></div></div>
+          <div class="mq-card"><div class="mq-card-label">Wrap + alignment</div><div class="wrap-demo"><i>Alpha</i><i>Beta</i><i>Gamma</i><i>Delta</i><i>Epsilon</i></div></div>
+          <div class="mq-card"><div class="mq-card-label">Absolute positioning</div><div class="position-demo"><i class="tl">TL</i><i class="center">CENTER</i><i class="br">BR</i></div></div>
+          <div class="mq-card"><div class="mq-card-label">Scrollable content</div><div class="mini-scroll"><p data-for="item : feed"><b>{{ item.title }}</b><br/><span>{{ item.body }}</span></p></div></div>
+        </div>
+        <div class="mq-notice success">The outer window is draggable, resizable, clipped, scrollable, and persistently restores geometry and lock state.</div>
+      </div>
+
+      <div class="page" data-if="tab == 'controls'">
+        <div class="section-head"><div><h3>Interactive controls</h3><p>Native form elements, pseudo-classes, delegated events and two-way values.</p></div></div>
+        <div class="two-col controls-grid">
+          <div class="mq-card mq-stack mq-gap-sm">
+            <div class="mq-card-label">Inputs</div>
+            <label>Name</label><input id="name-input" class="mq-input" type="text" data-value="name" value="" />
+            <label>Message</label><textarea id="message-input" class="mq-input textarea" rows="3" data-value="message"></textarea>
+            <label>Password</label><input class="mq-input" type="password" value="secret" />
+            <div class="mq-row mq-gap-sm"><input id="enabled-check" type="checkbox" data-checked="enabled"/><label for="enabled-check">Enabled</label><input type="radio" name="mode" checked/><span>A</span><input type="radio" name="mode"/><span>B</span></div>
+            <select id="quality-select" class="mq-input"><option>Low</option><option selected>High</option><option>Ultra</option></select>
+          </div>
+          <div class="mq-card mq-stack mq-gap-sm">
+            <div class="mq-card-label">Application controls</div>
+            <div class="mq-row mq-gap-sm"><button id="counter-down" class="mq-button">−</button><div class="counter">{{ counter }}</div><button id="counter-up" class="mq-button primary">+</button></div>
+            <div class="mq-row mq-gap-sm"><span>Notifications</span><button id="enabled-toggle" class="mq-switch" data-class-checked="enabled"><span class="mq-switch-thumb"></span></button></div>
+            <div id="choice" class="mq-segmented"><button class="mq-segment" data-class-active="choice == 'one'" data-mq-value="one">One</button><button class="mq-segment" data-class-active="choice == 'two'" data-mq-value="two">Two</button><button class="mq-segment" data-class-active="choice == 'three'" data-mq-value="three">Three</button></div>
+            <div class="mq-progress"><div class="mq-progress-fill" data-style-width="counter_css"></div></div>
+            <div class="mq-row mq-gap-sm"><span class="mq-tooltip-host"><button class="mq-button">Tooltip</button><span class="mq-tooltip">Pure RCSS hover tooltip</span></span><button class="mq-button danger" disabled>Disabled action</button></div>
+            <div class="mq-notice" data-if="enabled">Live model: {{ name }} · {{ choice }} · {{ counter }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" data-if="tab == 'data'">
+        <div class="section-head"><div><h3>Data binding and document API</h3><p>Structured models turn markup into a reactive application surface.</p></div><span class="mq-badge info">{{ row_count }} records</span></div>
+        <div class="stats">
+          <div class="mq-stat-card"><div class="mq-stat-icon">↻</div><div><div class="mq-stat-value">{{ ticks }}</div><div class="mq-stat-label">Model updates</div></div></div>
+          <div class="mq-stat-card"><div class="mq-stat-icon">⚡</div><div><div class="mq-stat-value">{{ event_count }}</div><div class="mq-stat-label">Events handled</div></div></div>
+          <div class="mq-stat-card"><div class="mq-stat-icon">≡</div><div><div class="mq-stat-value">{{ row_count }}</div><div class="mq-stat-label">Array items</div></div></div>
+        </div>
+        <div class="mq-card">
+          <div class="mq-row"><div class="mq-card-title mq-grow">Reactive inventory</div><button id="add-row" class="mq-button primary">Add row</button></div>
+          <div id="data-rows" class="mq-table">
+            <div class="mq-table-header"><div class="cell-name">Name</div><div class="cell-kind">Binding</div><div class="cell-value">Value</div></div>
+            <div class="mq-table-row" data-for="row : rows" data-mq-value="row.id"><div class="cell-name">{{ row.name }}</div><div class="cell-kind"><span class="mq-badge" data-class-success="row.live">{{ row.kind }}</span></div><div class="cell-value">{{ row.value }}</div></div>
+          </div>
+        </div>
+        <div class="api-grid">
+          <div><b>Document lifecycle</b><span>show · hide · reload · close · bring_to_front</span></div>
+          <div><b>DOM mutation</b><span>text · value · class · style · attributes · focus</span></div>
+          <div><b>Data models</b><span>nested records · arrays · conditions · loops · splice</span></div>
+          <div><b>Window services</b><span>geometry · scrolling · anchoring · persistence · locking</span></div>
+          <div><b>Resources</b><span>RML · RCSS · templates · images · EQ icon atlases</span></div>
+          <div><b>Input</b><span>mouse · keyboard · wheel · forms · drag · resize</span></div>
+        </div>
+      </div>
+    </div>
+
+    <resize-edge target="window" edge="right" min-width="700" min-height="520" class="edge right" />
+    <resize-edge target="window" edge="bottom" min-width="700" min-height="520" class="edge bottom" />
+    <resize-edge target="window" edge="bottom-right" min-width="700" min-height="520" class="edge corner" />
+  </div>
+</body>
+</rml>

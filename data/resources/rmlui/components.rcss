@@ -1,0 +1,42 @@
+#window { width: 720px; height: 620px; }
+#window-content { width: 100%; }
+.mq-toolbar {
+  width: 100%;
+  flex-direction: column;
+  align-items: stretch;
+}
+.mq-toolbar-main,
+.mq-toolbar-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  gap: var(--mq-space-2);
+}
+.mq-toolbar-main { justify-content: space-between; }
+.mq-toolbar-main .mq-input { flex: 1 1 auto; min-width: 0; }
+.mq-toolbar-main .mq-segmented { flex: 0 0 auto; }
+.mq-toolbar-actions { justify-content: flex-end; text-align: right; }
+.mq-toolbar .mq-button,
+.mq-toolbar .mq-segment { text-align: center; }
+.component-gallery {
+  display: block;
+  width: 100%;
+}
+.component-gallery > .gallery-wide,
+.component-gallery > .gallery-half {
+  display: block;
+  width: 100%;
+  margin-bottom: var(--mq-space-3);
+}
+#component-table { width: 100%; }
+#rows { display: flex; flex-direction: column; width: 100%; }
+.mq-table-header,
+.mq-table-row { width: 100%; }
+.col-name { flex: 1 1 auto; min-width: 0; }
+.col-state { flex: 0 0 110px; width: 110px; }
+.col-action { flex: 0 0 55px; width: 55px; text-align: right; }
+.mq-table-row .col-name { text-align: left; }
+.mq-table-row .col-state { text-align: center; }
+.mq-table-row .col-action { text-align: right; }
+.mq-tooltip-host { display: inline-block; padding: var(--mq-space-1); }

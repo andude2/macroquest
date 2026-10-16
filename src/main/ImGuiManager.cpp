@@ -19,6 +19,7 @@
 #include "Logging.h"
 #include "MQ2ImGuiTools.h"
 #include "MQPluginHandler.h"
+#include "OverlayInput.h"
 #include "imgui/ImGuiUtils.h"
 
 #include "mq/base/WString.h"
@@ -351,6 +352,9 @@ uint32_t bmPluginsUpdateImGui = 0;
 
 // global imgui toggle
 bool gbRenderImGui = true;
+
+// Overlay input broker consumer for ImGui.
+OverlayInputHandle s_overlayInputConsumer = 0;
 
 bool gbHideCursorAttachment = false;
 int gDrawWindowFrameSkipCount = -1;
@@ -1849,11 +1853,46 @@ void ImGuiManager_Initialize()
 
 	AddCommand("/mqoverlay", MQOverlayCommand);
 
+	if (s_overlayInputConsumer == 0)
+	{
+		OverlayInputConsumer consumer;
+		consumer.layer = OverlayInputLayer::ImGui;
+		consumer.handleWndProc = [](HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+		{
+			return gbRenderImGui && ImGuiManager_HandleWndProc(hWnd, msg, wParam, lParam);
+		};
+		consumer.wantsMouseInput = []()
+		{
+			return gbRenderImGui && ImGui::GetCurrentContext() != nullptr && ImGui::GetIO().WantCaptureMouse;
+		};
+		consumer.wantsKeyboardInput = []()
+		{
+			if (!gbRenderImGui || ImGui::GetCurrentContext() == nullptr)
+				return false;
+			const ImGuiIO& io = ImGui::GetIO();
+			return io.WantTextInput || io.WantCaptureKeyboard;
+		};
+		consumer.consumeKeyboardInput = []()
+		{
+			if (!gbRenderImGui || ImGui::GetCurrentContext() == nullptr)
+				return false;
+			const ImGuiIO& io = ImGui::GetIO();
+			return io.WantTextInput || (io.WantCaptureKeyboard && !io.WantCaptureMouse);
+		};
+		s_overlayInputConsumer = RegisterOverlayInputConsumer(std::move(consumer));
+	}
+
 	StartupOverlayComponents();
 }
 
 void ImGuiManager_Shutdown()
 {
+	if (s_overlayInputConsumer != 0)
+	{
+		UnregisterOverlayInputConsumer(s_overlayInputConsumer);
+		s_overlayInputConsumer = 0;
+	}
+
 	RemoveCommand("/mqoverlay");
 
 	RemoveMQ2Benchmark(bmUpdateImGui);
